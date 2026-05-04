@@ -217,7 +217,7 @@ export default function Schedule() {
     }
   };
 
-  const handleCellClick = (dayNum: number, slotNum: number, groupName: string, entry?: ScheduleEntry) => {
+  const handleCellClick = (_dayNum: number, _slotNum: number, _groupName: string, entry?: ScheduleEntry) => {
     if (!entry) return; // Currently only editing existing entries is supported
     setEditingEntry(entry);
     setEditFormData({
@@ -604,8 +604,8 @@ export default function Schedule() {
               <Button type="button" variant="secondary" onClick={() => { setMoveEntry(null); setMoveError(null); }} disabled={moveSaving}>
                 Отмена
               </Button>
-              <Button type="submit" loading={moveSaving} icon={MoveRight}>
-                Переместить
+              <Button type="submit" loading={moveSaving}>
+                <MoveRight className="h-4 w-4 mr-2 inline-block" /> Переместить
               </Button>
             </div>
           </form>
@@ -665,8 +665,8 @@ export default function Schedule() {
             </div>
 
             <div className="flex justify-between mt-6 pt-4 border-t border-museum-border">
-              <Button type="button" variant="danger" icon={Trash2} onClick={handleDeleteEntry} loading={editSaving}>
-                Удалить
+              <Button type="button" variant="danger" onClick={handleDeleteEntry} loading={editSaving}>
+                <Trash2 className="h-4 w-4 mr-2 inline-block" /> Удалить
               </Button>
               <div className="space-x-3 flex">
                 <Button type="button" variant="secondary" onClick={() => setEditingEntry(null)} disabled={editSaving}>
