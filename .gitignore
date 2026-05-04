@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+.env
+*.db
+*.db.bak
+*.pyc
+*.sqlite
+node_modules/
+dist/
+.claude/
+.agents/
+*.log
+*.zip
+*.exe
+cloudflared.exe

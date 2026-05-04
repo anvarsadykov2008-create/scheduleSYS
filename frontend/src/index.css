@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ── Local Fonts ── */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@theme {
+  /* ── Museum palette (Light Theme) ── */
+  --color-museum-bg: #f8f9fa;
+  --color-museum-surface: #ffffff;
+  --color-museum-surface-hover: #f1f3f5;
+  --color-museum-surface-light: #e9ecef;
+  --color-museum-accent: #d35400; /* Darker accent for contrast on white */
+  --color-museum-accent-hover: #e67e22;
+  --color-museum-accent-soft: rgba(211, 84, 0, 0.12);
+  --color-museum-text: #212529;
+  --color-museum-text-secondary: #495057;
+  --color-museum-text-muted: #868e96;
+  --color-museum-border: rgba(0, 0, 0, 0.1);
+  --color-museum-border-hover: rgba(0, 0, 0, 0.2);
+  --color-museum-danger: #e74c3c;
+  --color-museum-danger-soft: rgba(231, 76, 60, 0.12);
+  --color-museum-success: #2ecc71;
+  --color-museum-success-soft: rgba(46, 204, 113, 0.12);
+
+  /* ── Border radius ── */
+  --radius-museum-sm: 8px;
+  --radius-museum-md: 16px;
+  --radius-museum-lg: 24px;
+
+  /* ── Font families ── */
+  --font-museum: "Montserrat", system-ui, sans-serif;
+}
+
+@layer base {
+  :root.dark {
+    --color-museum-bg: #0a0b0c;
+    --color-museum-surface: #131416;
+    --color-museum-surface-hover: #1c1e21;
+    --color-museum-surface-light: #212529;
+    --color-museum-accent: #e67e22;
+    --color-museum-accent-hover: #f39c12;
+    --color-museum-accent-soft: rgba(230, 126, 34, 0.15);
+    --color-museum-text: #f8f9fa;
+    --color-museum-text-secondary: #dee2e6;
+    --color-museum-text-muted: #9ba3af;
+    --color-museum-border: rgba(255, 255, 255, 0.08);
+    --color-museum-border-hover: rgba(255, 255, 255, 0.15);
+    --color-museum-danger-soft: rgba(231, 76, 60, 0.2);
+    --color-museum-success-soft: rgba(46, 204, 113, 0.2);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-museum-bg);
+    color: var(--color-museum-text);
+    font-family: var(--font-museum);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar for light theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-museum-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-museum-border-hover);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-museum-text-muted);
+  }
+
+  /* Select option backgrounds */
+  option {
+    background: var(--color-museum-surface);
+    color: var(--color-museum-text);
+  }
+}
+
+/* ── Utility: hide scrollbar but keep scroll ── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,4555 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict nbiDBKES8EqVXc2Z9z3OPxgl7t8xfHx2GFxVccGMYp8siAZWhfPDaFvcIq5Dv90
+
+-- Dumped from database version 17.7
+-- Dumped by pg_dump version 17.7
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: classroomtype; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.classroomtype AS ENUM (
+    'REGULAR',
+    'COMPUTER',
+    'LABORATORY',
+    'GYM',
+    'SPECIALIZED'
+);
+
+
+ALTER TYPE public.classroomtype OWNER TO postgres;
+
+--
+-- Name: employmenttype; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.employmenttype AS ENUM (
+    'STAFF',
+    'HOURLY'
+);
+
+
+ALTER TYPE public.employmenttype OWNER TO postgres;
+
+--
+-- Name: lessontype; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.lessontype AS ENUM (
+    'LECTURE',
+    'PRACTICE',
+    'LAB',
+    'TRAINING_PRACTICE',
+    'PRODUCTION_PRACTICE',
+    'PHYSICAL_EDUCATION',
+    'NVP',
+    'CONSULTATION',
+    'ATTESTATION'
+);
+
+
+ALTER TYPE public.lessontype OWNER TO postgres;
+
+--
+-- Name: periodtype; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.periodtype AS ENUM (
+    'STUDY',
+    'NUMERATOR',
+    'DENOMINATOR',
+    'TRAINING_PRACTICE',
+    'PRODUCTION_PRACTICE',
+    'MIDTERM',
+    'FINAL',
+    'VACATION',
+    'NON_STUDY'
+);
+
+
+ALTER TYPE public.periodtype OWNER TO postgres;
+
+--
+-- Name: schedulestatus; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.schedulestatus AS ENUM (
+    'DRAFT',
+    'GENERATED',
+    'EDITED',
+    'APPROVED',
+    'PUBLISHED',
+    'ARCHIVED'
+);
+
+
+ALTER TYPE public.schedulestatus OWNER TO postgres;
+
+--
+-- Name: userrole; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.userrole AS ENUM (
+    'ADMIN',
+    'DISPATCHER',
+    'TEACHER',
+    'STUDENT',
+    'MANAGEMENT'
+);
+
+
+ALTER TYPE public.userrole OWNER TO postgres;
+
+--
+-- Name: weektype; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.weektype AS ENUM (
+    'BOTH',
+    'NUMERATOR',
+    'DENOMINATOR'
+);
+
+
+ALTER TYPE public.weektype OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: academic_periods; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.academic_periods (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    semester_id integer NOT NULL,
+    week_number integer NOT NULL,
+    period_type public.periodtype NOT NULL
+);
+
+
+ALTER TABLE public.academic_periods OWNER TO postgres;
+
+--
+-- Name: academic_periods_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.academic_periods_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.academic_periods_id_seq OWNER TO postgres;
+
+--
+-- Name: academic_periods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.academic_periods_id_seq OWNED BY public.academic_periods.id;
+
+
+--
+-- Name: academic_years; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.academic_years (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL
+);
+
+
+ALTER TABLE public.academic_years OWNER TO postgres;
+
+--
+-- Name: academic_years_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.academic_years_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.academic_years_id_seq OWNER TO postgres;
+
+--
+-- Name: academic_years_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.academic_years_id_seq OWNED BY public.academic_years.id;
+
+
+--
+-- Name: classroom_assignments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.classroom_assignments (
+    id integer NOT NULL,
+    classroom_id integer NOT NULL,
+    teacher_id integer NOT NULL
+);
+
+
+ALTER TABLE public.classroom_assignments OWNER TO postgres;
+
+--
+-- Name: classroom_assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.classroom_assignments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.classroom_assignments_id_seq OWNER TO postgres;
+
+--
+-- Name: classroom_assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.classroom_assignments_id_seq OWNED BY public.classroom_assignments.id;
+
+
+--
+-- Name: classrooms; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.classrooms (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    type public.classroomtype NOT NULL,
+    capacity integer NOT NULL
+);
+
+
+ALTER TABLE public.classrooms OWNER TO postgres;
+
+--
+-- Name: classrooms_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.classrooms_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.classrooms_id_seq OWNER TO postgres;
+
+--
+-- Name: classrooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.classrooms_id_seq OWNED BY public.classrooms.id;
+
+
+--
+-- Name: departments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.departments (
+    id integer NOT NULL,
+    name character varying(200) NOT NULL
+);
+
+
+ALTER TABLE public.departments OWNER TO postgres;
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.departments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.departments_id_seq OWNER TO postgres;
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.departments_id_seq OWNED BY public.departments.id;
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.groups (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    course integer NOT NULL,
+    department_id integer NOT NULL,
+    student_count integer
+);
+
+
+ALTER TABLE public.groups OWNER TO postgres;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.groups_id_seq OWNER TO postgres;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
+
+
+--
+-- Name: hour_grids; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.hour_grids (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    subject_id integer NOT NULL,
+    semester_id integer NOT NULL,
+    lesson_type public.lessontype NOT NULL,
+    total_hours integer NOT NULL,
+    subgroup_hours character varying(50)
+);
+
+
+ALTER TABLE public.hour_grids OWNER TO postgres;
+
+--
+-- Name: hour_grids_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.hour_grids_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.hour_grids_id_seq OWNER TO postgres;
+
+--
+-- Name: hour_grids_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.hour_grids_id_seq OWNED BY public.hour_grids.id;
+
+
+--
+-- Name: schedule_entries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schedule_entries (
+    id integer NOT NULL,
+    version_id integer NOT NULL,
+    group_id integer NOT NULL,
+    subgroup_id integer,
+    subject_id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    classroom_id integer NOT NULL,
+    day_of_week integer NOT NULL,
+    time_slot_id integer NOT NULL,
+    week_type public.weektype NOT NULL,
+    lesson_type public.lessontype NOT NULL,
+    is_locked boolean
+);
+
+
+ALTER TABLE public.schedule_entries OWNER TO postgres;
+
+--
+-- Name: schedule_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.schedule_entries_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.schedule_entries_id_seq OWNER TO postgres;
+
+--
+-- Name: schedule_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.schedule_entries_id_seq OWNED BY public.schedule_entries.id;
+
+
+--
+-- Name: schedule_versions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schedule_versions (
+    id integer NOT NULL,
+    semester_id integer NOT NULL,
+    status public.schedulestatus NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    description text
+);
+
+
+ALTER TABLE public.schedule_versions OWNER TO postgres;
+
+--
+-- Name: schedule_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.schedule_versions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.schedule_versions_id_seq OWNER TO postgres;
+
+--
+-- Name: schedule_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.schedule_versions_id_seq OWNED BY public.schedule_versions.id;
+
+
+--
+-- Name: semesters; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.semesters (
+    id integer NOT NULL,
+    academic_year_id integer NOT NULL,
+    number integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL
+);
+
+
+ALTER TABLE public.semesters OWNER TO postgres;
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.semesters_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.semesters_id_seq OWNER TO postgres;
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.semesters_id_seq OWNED BY public.semesters.id;
+
+
+--
+-- Name: subgroups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subgroups (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.subgroups OWNER TO postgres;
+
+--
+-- Name: subgroups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.subgroups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.subgroups_id_seq OWNER TO postgres;
+
+--
+-- Name: subgroups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.subgroups_id_seq OWNED BY public.subgroups.id;
+
+
+--
+-- Name: subjects; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subjects (
+    id integer NOT NULL,
+    name character varying(300) NOT NULL,
+    short_name character varying(50)
+);
+
+
+ALTER TABLE public.subjects OWNER TO postgres;
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.subjects_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.subjects_id_seq OWNER TO postgres;
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.subjects_id_seq OWNED BY public.subjects.id;
+
+
+--
+-- Name: teacher_availabilities; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.teacher_availabilities (
+    id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    day_of_week integer NOT NULL,
+    time_slot_id integer NOT NULL
+);
+
+
+ALTER TABLE public.teacher_availabilities OWNER TO postgres;
+
+--
+-- Name: teacher_availabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.teacher_availabilities_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.teacher_availabilities_id_seq OWNER TO postgres;
+
+--
+-- Name: teacher_availabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.teacher_availabilities_id_seq OWNED BY public.teacher_availabilities.id;
+
+
+--
+-- Name: teacher_subjects; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.teacher_subjects (
+    id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    subject_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.teacher_subjects OWNER TO postgres;
+
+--
+-- Name: teacher_subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.teacher_subjects_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.teacher_subjects_id_seq OWNER TO postgres;
+
+--
+-- Name: teacher_subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.teacher_subjects_id_seq OWNED BY public.teacher_subjects.id;
+
+
+--
+-- Name: teachers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.teachers (
+    id integer NOT NULL,
+    full_name character varying(200) NOT NULL,
+    employment_type public.employmenttype NOT NULL,
+    max_hours_per_week integer
+);
+
+
+ALTER TABLE public.teachers OWNER TO postgres;
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.teachers_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.teachers_id_seq OWNER TO postgres;
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.teachers_id_seq OWNED BY public.teachers.id;
+
+
+--
+-- Name: time_slots; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.time_slots (
+    id integer NOT NULL,
+    number integer NOT NULL,
+    start_time time without time zone NOT NULL,
+    end_time time without time zone NOT NULL
+);
+
+
+ALTER TABLE public.time_slots OWNER TO postgres;
+
+--
+-- Name: time_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.time_slots_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.time_slots_id_seq OWNER TO postgres;
+
+--
+-- Name: time_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.time_slots_id_seq OWNED BY public.time_slots.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(100) NOT NULL,
+    password_hash character varying(255) NOT NULL,
+    role public.userrole NOT NULL,
+    teacher_id integer,
+    full_name character varying(200)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: academic_periods id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_periods ALTER COLUMN id SET DEFAULT nextval('public.academic_periods_id_seq'::regclass);
+
+
+--
+-- Name: academic_years id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_years ALTER COLUMN id SET DEFAULT nextval('public.academic_years_id_seq'::regclass);
+
+
+--
+-- Name: classroom_assignments id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classroom_assignments ALTER COLUMN id SET DEFAULT nextval('public.classroom_assignments_id_seq'::regclass);
+
+
+--
+-- Name: classrooms id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classrooms ALTER COLUMN id SET DEFAULT nextval('public.classrooms_id_seq'::regclass);
+
+
+--
+-- Name: departments id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.departments ALTER COLUMN id SET DEFAULT nextval('public.departments_id_seq'::regclass);
+
+
+--
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
+
+
+--
+-- Name: hour_grids id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hour_grids ALTER COLUMN id SET DEFAULT nextval('public.hour_grids_id_seq'::regclass);
+
+
+--
+-- Name: schedule_entries id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries ALTER COLUMN id SET DEFAULT nextval('public.schedule_entries_id_seq'::regclass);
+
+
+--
+-- Name: schedule_versions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_versions ALTER COLUMN id SET DEFAULT nextval('public.schedule_versions_id_seq'::regclass);
+
+
+--
+-- Name: semesters id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.semesters ALTER COLUMN id SET DEFAULT nextval('public.semesters_id_seq'::regclass);
+
+
+--
+-- Name: subgroups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subgroups ALTER COLUMN id SET DEFAULT nextval('public.subgroups_id_seq'::regclass);
+
+
+--
+-- Name: subjects id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subjects ALTER COLUMN id SET DEFAULT nextval('public.subjects_id_seq'::regclass);
+
+
+--
+-- Name: teacher_availabilities id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_availabilities ALTER COLUMN id SET DEFAULT nextval('public.teacher_availabilities_id_seq'::regclass);
+
+
+--
+-- Name: teacher_subjects id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects ALTER COLUMN id SET DEFAULT nextval('public.teacher_subjects_id_seq'::regclass);
+
+
+--
+-- Name: teachers id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teachers ALTER COLUMN id SET DEFAULT nextval('public.teachers_id_seq'::regclass);
+
+
+--
+-- Name: time_slots id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.time_slots ALTER COLUMN id SET DEFAULT nextval('public.time_slots_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: academic_periods; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.academic_periods (id, group_id, semester_id, week_number, period_type) FROM stdin;
+\.
+
+
+--
+-- Data for Name: academic_years; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.academic_years (id, name, start_date, end_date) FROM stdin;
+1	2025-2026	2025-09-01	2026-06-30
+\.
+
+
+--
+-- Data for Name: classroom_assignments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.classroom_assignments (id, classroom_id, teacher_id) FROM stdin;
+1	1	81
+2	2	69
+3	3	66
+4	4	48
+5	5	76
+6	6	36
+7	7	55
+8	8	82
+9	9	72
+10	10	56
+11	11	92
+12	12	13
+13	13	47
+14	14	71
+15	15	62
+16	16	78
+17	17	91
+18	18	38
+19	19	33
+20	20	57
+21	21	94
+22	22	59
+23	23	18
+24	24	70
+25	25	6
+26	26	46
+27	27	80
+28	28	77
+29	29	15
+30	30	20
+31	31	90
+32	32	73
+33	33	2
+34	34	21
+35	35	9
+36	36	4
+37	37	67
+38	38	30
+39	39	17
+40	40	65
+41	41	10
+42	42	89
+43	43	8
+\.
+
+
+--
+-- Data for Name: classrooms; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.classrooms (id, name, type, capacity) FROM stdin;
+1	101	LABORATORY	30
+2	104	REGULAR	30
+3	113	COMPUTER	30
+4	114	REGULAR	32
+5	115	LABORATORY	30
+6	116	REGULAR	32
+7	117	REGULAR	26
+8	118	REGULAR	30
+9	120	COMPUTER	30
+10	200	REGULAR	30
+11	201	REGULAR	30
+12	203	REGULAR	30
+13	208	REGULAR	30
+14	209	REGULAR	30
+15	210	REGULAR	28
+16	211	REGULAR	30
+17	212	REGULAR	30
+18	213	REGULAR	30
+19	218	COMPUTER	30
+20	220	COMPUTER	30
+21	222	COMPUTER	30
+22	224	COMPUTER	30
+23	300	REGULAR	30
+24	301	REGULAR	30
+25	302	REGULAR	30
+26	303	REGULAR	30
+27	304	REGULAR	30
+28	306	REGULAR	30
+29	308	REGULAR	30
+30	309	REGULAR	30
+31	310	REGULAR	30
+32	311	COMPUTER	16
+33	312	REGULAR	30
+34	313	COMPUTER	20
+35	316	REGULAR	28
+36	318	COMPUTER	20
+37	320	COMPUTER	30
+38	322	COMPUTER	30
+39	324	COMPUTER	30
+40	Лаб. 1	LABORATORY	15
+41	Лаб. 2	LABORATORY	15
+42	Лаб. 3	LABORATORY	15
+43	Лаб. 4	LABORATORY	15
+44	Спортзал	GYM	60
+\.
+
+
+--
+-- Data for Name: departments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.departments (id, name) FROM stdin;
+1	Отделение информационных технологий
+2	Технологическое отделение
+3	Отделение учета и аудита
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.groups (id, name, course, department_id, student_count) FROM stdin;
+1	WEB 1-1	1	1	25
+2	WEB 1-2	1	1	26
+3	WEB 1-3	1	1	25
+4	РПО 1-1	1	1	25
+5	ОП 1-1	1	2	25
+6	ОП 1-2	1	2	26
+7	ТК 1-1	1	2	26
+8	ТП 1-1	1	2	25
+9	БУХ 1-1	1	3	25
+10	БУХ 1-2	1	3	25
+11	БУХ 1-3	1	3	25
+12	БД 1-1	1	3	25
+13	БД 1-2	1	3	25
+14	БД 1-3	1	3	25
+15	WEB 2-1	2	1	23
+16	WEB 2-2	2	1	20
+17	WEB 2-3	2	1	25
+18	ИС 2-1	2	1	25
+19	РПО 2-1	2	1	29
+20	ОП 2-1	2	2	23
+21	ОП 2-2	2	2	20
+22	ОП 2-3	2	2	26
+23	ТК 2-1	2	2	31
+24	ТХ 2-1	2	2	23
+25	ТП 2-1	2	2	29
+26	БУХ 2-1	2	3	25
+27	БУХ 2-2	2	3	25
+28	БУХ 2-3	2	3	25
+29	БД 2-1	2	3	25
+30	БД 2-2	2	3	25
+31	WEB 3-1	3	1	25
+32	WEB 3-2	3	1	25
+33	WEB 3-3	3	1	25
+34	WEB 3-4	3	1	25
+35	WEB 3-5	3	1	25
+36	РПО 3-1	3	1	25
+37	ОП 3-1	3	2	23
+38	ОП 3-2	3	2	25
+39	ОП 3-3	3	2	23
+40	ТК 3-1	3	2	25
+41	ТХ 3-1	3	2	22
+42	ТП 3-1	3	2	27
+43	БУХ 3-1	3	3	25
+44	БУХ 3-2	3	3	25
+45	БД 3-1	3	3	25
+46	БД 3-2	3	3	25
+47	РПО 4-1	4	1	25
+48	РПО 4-2	4	1	25
+49	ТХ 4-1	4	2	23
+50	ТП 4-1	4	2	14
+51	ОП 4-1	4	2	25
+\.
+
+
+--
+-- Data for Name: hour_grids; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.hour_grids (id, group_id, subject_id, semester_id, lesson_type, total_hours, subgroup_hours) FROM stdin;
+1	1	1	1	LECTURE	48	\N
+2	1	1	2	LECTURE	48	\N
+3	1	3	1	PRACTICE	48	48/48
+4	1	3	2	PRACTICE	48	48/48
+5	1	4	1	PRACTICE	48	48/48
+6	1	4	2	PRACTICE	48	48/48
+7	1	5	1	LECTURE	48	\N
+8	1	5	2	LECTURE	24	\N
+9	1	7	1	LECTURE	48	\N
+10	1	7	2	LECTURE	72	\N
+11	1	8	1	LAB	48	48/48
+12	1	8	2	LAB	24	24/24
+13	1	9	1	LECTURE	48	\N
+14	1	9	2	LECTURE	48	\N
+15	1	10	1	LECTURE	48	\N
+16	1	10	2	LECTURE	48	\N
+17	1	14	1	PRACTICE	72	72/72
+18	1	14	2	PRACTICE	48	48/48
+19	1	26	2	LAB	72	72/72
+20	2	3	1	PRACTICE	48	48/48
+21	2	3	2	PRACTICE	48	48/48
+22	2	7	1	LECTURE	48	\N
+23	2	7	2	LECTURE	72	\N
+24	2	14	1	PRACTICE	72	72/72
+25	2	14	2	PRACTICE	48	48/48
+26	2	26	2	LAB	72	72/72
+27	4	1	1	PRACTICE	48	48/48
+28	4	1	2	PRACTICE	48	48/48
+29	4	7	1	LECTURE	72	\N
+30	4	7	2	LECTURE	48	\N
+32	5	63	1	LECTURE	48	\N
+33	9	7	1	LECTURE	72	\N
+34	9	7	2	LECTURE	48	\N
+35	9	19	1	LECTURE	36	\N
+36	15	15	1	LECTURE	72	\N
+37	15	12	1	PRACTICE	36	\N
+38	15	14	1	PRACTICE	48	\N
+39	15	17	1	LAB	60	\N
+40	15	27	1	PRACTICE	216	\N
+41	15	28	2	PRACTICE	288	\N
+42	16	15	1	LECTURE	72	\N
+43	16	14	1	PRACTICE	48	\N
+44	16	27	1	PRACTICE	216	\N
+45	16	28	2	PRACTICE	288	\N
+46	18	14	1	PRACTICE	120	60/60
+49	19	29	1	LAB	262	131/131
+50	19	31	2	LAB	364	182/182
+51	23	59	1	PRACTICE	288	144/144
+53	26	96	1	PRACTICE	120	\N
+54	26	100	2	LAB	144	72/72
+56	31	37	1	LAB	192	96/96
+58	36	46	1	LAB	192	96/96
+59	40	69	1	PRACTICE	336	168/168
+60	41	71	1	PRACTICE	84	\N
+61	37	74	1	PRACTICE	114	57/57
+62	42	87	1	PRACTICE	144	\N
+63	43	110	1	PRACTICE	48	\N
+65	45	116	1	PRACTICE	72	\N
+67	47	49	1	PRACTICE	96	\N
+68	47	50	1	LAB	72	\N
+69	51	92	1	PRACTICE	120	\N
+70	51	93	2	LECTURE	72	\N
+71	49	95	1	PRACTICE	72	\N
+72	50	89	1	PRACTICE	96	\N
+73	3	1	1	LECTURE	48	\N
+74	3	1	2	LECTURE	48	\N
+75	3	3	1	PRACTICE	48	48/48
+76	3	3	2	PRACTICE	48	48/48
+77	3	4	1	PRACTICE	48	48/48
+78	3	4	2	PRACTICE	48	48/48
+79	3	5	1	LECTURE	48	\N
+80	3	5	2	LECTURE	24	\N
+81	3	7	1	LECTURE	48	\N
+82	3	7	2	LECTURE	72	\N
+83	3	8	1	LAB	48	48/48
+84	3	8	2	LAB	24	24/24
+85	3	9	1	LECTURE	48	\N
+86	3	9	2	LECTURE	48	\N
+87	3	10	1	LECTURE	48	\N
+88	3	10	2	LECTURE	48	\N
+89	3	14	1	PRACTICE	72	72/72
+90	3	14	2	PRACTICE	48	48/48
+91	3	26	2	LAB	72	72/72
+92	6	63	1	LECTURE	48	\N
+93	10	7	1	LECTURE	72	\N
+94	10	7	2	LECTURE	48	\N
+95	10	19	1	LECTURE	36	\N
+96	11	7	1	LECTURE	72	\N
+97	11	7	2	LECTURE	48	\N
+98	11	19	1	LECTURE	36	\N
+99	7	1	1	LECTURE	48	\N
+100	7	1	2	LECTURE	48	\N
+101	7	3	1	PRACTICE	48	48/48
+102	7	3	2	PRACTICE	48	48/48
+103	7	4	1	PRACTICE	48	48/48
+104	7	4	2	PRACTICE	48	48/48
+105	7	5	1	LECTURE	48	\N
+106	7	5	2	LECTURE	24	\N
+107	7	7	1	LECTURE	48	\N
+108	7	7	2	LECTURE	72	\N
+109	7	8	1	LAB	48	48/48
+110	7	8	2	LAB	24	24/24
+111	7	9	1	LECTURE	48	\N
+112	7	9	2	LECTURE	48	\N
+113	7	10	1	LECTURE	48	\N
+114	7	10	2	LECTURE	48	\N
+115	7	14	1	PRACTICE	72	72/72
+116	7	14	2	PRACTICE	48	48/48
+117	7	26	2	LAB	72	72/72
+118	8	1	1	LECTURE	48	\N
+119	8	1	2	LECTURE	48	\N
+120	8	3	1	PRACTICE	48	48/48
+121	8	3	2	PRACTICE	48	48/48
+122	8	4	1	PRACTICE	48	48/48
+123	8	4	2	PRACTICE	48	48/48
+124	8	5	1	LECTURE	48	\N
+125	8	5	2	LECTURE	24	\N
+126	8	7	1	LECTURE	48	\N
+127	8	7	2	LECTURE	72	\N
+128	8	8	1	LAB	48	48/48
+129	8	8	2	LAB	24	24/24
+130	8	9	1	LECTURE	48	\N
+131	8	9	2	LECTURE	48	\N
+132	8	10	1	LECTURE	48	\N
+133	8	10	2	LECTURE	48	\N
+134	8	14	1	PRACTICE	72	72/72
+135	8	14	2	PRACTICE	48	48/48
+136	8	26	2	LAB	72	72/72
+137	12	1	1	LECTURE	48	\N
+138	12	1	2	LECTURE	48	\N
+139	12	3	1	PRACTICE	48	48/48
+140	12	3	2	PRACTICE	48	48/48
+141	12	4	1	PRACTICE	48	48/48
+142	12	4	2	PRACTICE	48	48/48
+143	12	5	1	LECTURE	48	\N
+144	12	5	2	LECTURE	24	\N
+145	12	7	1	LECTURE	48	\N
+146	12	7	2	LECTURE	72	\N
+147	12	8	1	LAB	48	48/48
+148	12	8	2	LAB	24	24/24
+149	12	9	1	LECTURE	48	\N
+150	12	9	2	LECTURE	48	\N
+151	12	10	1	LECTURE	48	\N
+152	12	10	2	LECTURE	48	\N
+153	12	14	1	PRACTICE	72	72/72
+154	12	14	2	PRACTICE	48	48/48
+155	12	26	2	LAB	72	72/72
+156	13	1	1	LECTURE	48	\N
+157	13	1	2	LECTURE	48	\N
+158	13	3	1	PRACTICE	48	48/48
+159	13	3	2	PRACTICE	48	48/48
+160	13	4	1	PRACTICE	48	48/48
+161	13	4	2	PRACTICE	48	48/48
+162	13	5	1	LECTURE	48	\N
+163	13	5	2	LECTURE	24	\N
+164	13	7	1	LECTURE	48	\N
+165	13	7	2	LECTURE	72	\N
+166	13	8	1	LAB	48	48/48
+167	13	8	2	LAB	24	24/24
+168	13	9	1	LECTURE	48	\N
+169	13	9	2	LECTURE	48	\N
+170	13	10	1	LECTURE	48	\N
+171	13	10	2	LECTURE	48	\N
+172	13	14	1	PRACTICE	72	72/72
+173	13	14	2	PRACTICE	48	48/48
+174	13	26	2	LAB	72	72/72
+175	14	1	1	LECTURE	48	\N
+176	14	1	2	LECTURE	48	\N
+177	14	3	1	PRACTICE	48	48/48
+178	14	3	2	PRACTICE	48	48/48
+179	14	4	1	PRACTICE	48	48/48
+180	14	4	2	PRACTICE	48	48/48
+181	14	5	1	LECTURE	48	\N
+182	14	5	2	LECTURE	24	\N
+183	14	7	1	LECTURE	48	\N
+184	14	7	2	LECTURE	72	\N
+185	14	8	1	LAB	48	48/48
+186	14	8	2	LAB	24	24/24
+187	14	9	1	LECTURE	48	\N
+188	14	9	2	LECTURE	48	\N
+189	14	10	1	LECTURE	48	\N
+190	14	10	2	LECTURE	48	\N
+191	14	14	1	PRACTICE	72	72/72
+192	14	14	2	PRACTICE	48	48/48
+193	14	26	2	LAB	72	72/72
+194	17	15	1	LECTURE	72	\N
+195	17	12	1	PRACTICE	36	\N
+196	17	14	1	PRACTICE	48	\N
+197	17	17	1	LAB	60	\N
+198	17	27	1	PRACTICE	216	\N
+199	17	28	2	PRACTICE	288	\N
+201	27	96	1	PRACTICE	120	\N
+202	27	100	2	LAB	144	72/72
+204	28	96	1	PRACTICE	120	\N
+205	28	100	2	LAB	144	72/72
+206	20	15	1	LECTURE	72	\N
+207	20	12	1	PRACTICE	36	\N
+208	20	14	1	PRACTICE	48	\N
+209	20	17	1	LAB	60	\N
+210	20	27	1	PRACTICE	216	\N
+211	20	28	2	PRACTICE	288	\N
+212	21	15	1	LECTURE	72	\N
+213	21	12	1	PRACTICE	36	\N
+214	21	14	1	PRACTICE	48	\N
+215	21	17	1	LAB	60	\N
+216	21	27	1	PRACTICE	216	\N
+217	21	28	2	PRACTICE	288	\N
+218	22	15	1	LECTURE	72	\N
+219	22	12	1	PRACTICE	36	\N
+220	22	14	1	PRACTICE	48	\N
+221	22	17	1	LAB	60	\N
+222	22	27	1	PRACTICE	216	\N
+223	22	28	2	PRACTICE	288	\N
+224	24	15	1	LECTURE	72	\N
+225	24	12	1	PRACTICE	36	\N
+226	24	14	1	PRACTICE	48	\N
+227	24	17	1	LAB	60	\N
+228	24	27	1	PRACTICE	216	\N
+229	24	28	2	PRACTICE	288	\N
+230	25	15	1	LECTURE	72	\N
+231	25	12	1	PRACTICE	36	\N
+232	25	14	1	PRACTICE	48	\N
+233	25	17	1	LAB	60	\N
+234	25	27	1	PRACTICE	216	\N
+235	25	28	2	PRACTICE	288	\N
+237	29	96	1	PRACTICE	120	\N
+238	29	100	2	LAB	144	72/72
+240	30	96	1	PRACTICE	120	\N
+241	30	100	2	LAB	144	72/72
+243	32	37	1	LAB	192	96/96
+245	33	37	1	LAB	192	96/96
+247	34	37	1	LAB	192	96/96
+249	35	37	1	LAB	192	96/96
+250	38	74	1	PRACTICE	114	57/57
+251	39	74	1	PRACTICE	114	57/57
+252	44	110	1	PRACTICE	48	\N
+254	46	116	1	PRACTICE	72	\N
+256	48	49	1	PRACTICE	96	\N
+257	48	50	1	LAB	72	\N
+57	36	40	1	LAB	156	78/78
+47	18	33	1	LAB	232	116/116
+55	31	36	1	LAB	228	114/114
+242	32	36	1	LAB	228	114/114
+244	33	36	1	LAB	228	114/114
+246	34	36	1	LAB	228	114/114
+248	35	36	1	LAB	228	114/114
+\.
+
+
+--
+-- Data for Name: schedule_entries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.schedule_entries (id, version_id, group_id, subgroup_id, subject_id, teacher_id, classroom_id, day_of_week, time_slot_id, week_type, lesson_type, is_locked) FROM stdin;
+1	1	1	\N	1	20	30	5	1	BOTH	LECTURE	f
+2	1	1	1	3	14	32	1	2	BOTH	PRACTICE	f
+3	1	1	2	3	14	32	3	4	BOTH	PRACTICE	f
+4	1	1	1	4	9	35	4	1	BOTH	PRACTICE	f
+5	1	1	2	4	9	35	2	2	BOTH	PRACTICE	f
+6	1	1	\N	5	71	14	5	2	BOTH	LECTURE	f
+7	1	1	\N	7	26	7	2	4	BOTH	LECTURE	f
+8	1	1	\N	7	26	7	3	2	BOTH	LECTURE	f
+9	1	1	1	8	66	3	4	2	BOTH	LAB	f
+10	1	1	2	8	66	3	1	2	BOTH	LAB	f
+11	1	1	\N	9	56	10	5	3	BOTH	LECTURE	f
+12	1	1	\N	10	69	2	3	3	BOTH	LECTURE	f
+13	1	1	1	14	74	32	1	3	BOTH	PRACTICE	f
+14	1	1	2	14	74	32	2	3	BOTH	PRACTICE	f
+15	1	1	1	26	94	21	4	3	BOTH	LAB	f
+16	1	1	1	26	94	21	4	4	BOTH	LAB	f
+17	1	1	2	26	94	21	1	3	BOTH	LAB	f
+18	1	1	2	26	94	21	2	1	BOTH	LAB	f
+19	1	2	3	3	78	16	4	4	BOTH	PRACTICE	f
+20	1	2	4	3	78	16	2	2	BOTH	PRACTICE	f
+21	1	2	\N	7	26	7	3	1	BOTH	LECTURE	f
+22	1	2	\N	7	26	7	5	2	BOTH	LECTURE	f
+23	1	2	3	14	64	32	1	1	BOTH	PRACTICE	f
+24	1	2	4	14	64	34	2	3	BOTH	PRACTICE	f
+25	1	2	3	26	66	3	4	3	BOTH	LAB	f
+26	1	2	3	26	66	3	1	3	BOTH	LAB	f
+27	1	2	4	26	66	3	3	2	BOTH	LAB	f
+28	1	2	4	26	66	3	5	3	BOTH	LAB	f
+29	1	4	7	1	86	36	2	3	BOTH	PRACTICE	f
+30	1	4	8	1	86	34	1	3	BOTH	PRACTICE	f
+31	1	4	\N	7	11	7	5	1	BOTH	LECTURE	f
+34	1	9	\N	7	13	12	4	2	BOTH	LECTURE	f
+35	1	15	\N	28	27	15	3	3	BOTH	PRACTICE	f
+36	1	15	\N	28	27	7	4	3	BOTH	PRACTICE	f
+37	1	15	\N	28	27	7	5	4	BOTH	PRACTICE	f
+38	1	15	\N	28	27	15	2	4	BOTH	PRACTICE	f
+39	1	15	\N	28	27	7	4	4	BOTH	PRACTICE	f
+40	1	15	\N	28	27	15	3	4	BOTH	PRACTICE	f
+41	1	16	\N	28	59	22	3	3	BOTH	PRACTICE	f
+42	1	16	\N	28	59	22	4	2	BOTH	PRACTICE	f
+43	1	16	\N	28	59	22	5	3	BOTH	PRACTICE	f
+44	1	16	\N	28	59	22	1	3	BOTH	PRACTICE	f
+45	1	16	\N	28	59	22	2	2	BOTH	PRACTICE	f
+46	1	16	\N	28	59	22	5	4	BOTH	PRACTICE	f
+47	1	19	37	31	30	38	4	4	BOTH	LAB	f
+48	1	19	37	31	30	38	1	2	BOTH	LAB	f
+49	1	19	37	31	30	38	5	2	BOTH	LAB	f
+50	1	19	37	31	30	38	3	2	BOTH	LAB	f
+51	1	19	37	31	30	38	2	2	BOTH	LAB	f
+52	1	19	37	31	30	38	3	3	BOTH	LAB	f
+53	1	19	37	31	30	38	1	3	BOTH	LAB	f
+54	1	19	37	31	30	38	2	3	BOTH	LAB	f
+55	1	19	38	31	30	38	5	3	BOTH	LAB	f
+56	1	19	38	31	30	38	4	3	BOTH	LAB	f
+57	1	19	38	31	30	38	5	4	BOTH	LAB	f
+58	1	19	38	31	30	38	3	1	BOTH	LAB	f
+59	1	19	38	31	30	38	1	1	BOTH	LAB	f
+60	1	19	38	31	30	38	4	2	BOTH	LAB	f
+61	1	19	38	31	30	38	2	1	BOTH	LAB	f
+62	1	19	38	31	30	38	1	4	BOTH	LAB	f
+63	1	26	51	100	41	40	2	4	BOTH	LAB	f
+64	1	26	51	100	41	40	5	3	BOTH	LAB	f
+65	1	26	51	100	41	40	5	4	BOTH	LAB	f
+66	1	26	52	100	41	40	1	2	BOTH	LAB	f
+67	1	26	52	100	41	40	4	2	BOTH	LAB	f
+68	1	26	52	100	41	40	3	4	BOTH	LAB	f
+69	1	51	\N	93	12	7	5	6	BOTH	LECTURE	f
+70	1	51	\N	93	12	7	2	5	BOTH	LECTURE	f
+71	1	3	\N	1	20	30	5	2	BOTH	LECTURE	f
+72	1	3	5	3	14	36	1	3	BOTH	PRACTICE	f
+73	1	3	6	3	14	32	3	3	BOTH	PRACTICE	f
+74	1	3	5	4	9	35	2	3	BOTH	PRACTICE	f
+75	1	3	6	4	9	35	4	2	BOTH	PRACTICE	f
+76	1	3	\N	5	71	14	5	3	BOTH	LECTURE	f
+77	1	3	\N	7	26	7	1	1	BOTH	LECTURE	f
+78	1	3	\N	7	26	15	4	3	BOTH	LECTURE	f
+79	1	3	5	8	66	3	2	4	BOTH	LAB	f
+80	1	3	6	8	66	3	3	1	BOTH	LAB	f
+81	1	3	\N	9	56	10	5	4	BOTH	LECTURE	f
+82	1	3	\N	10	69	2	3	2	BOTH	LECTURE	f
+83	1	3	5	14	74	32	1	4	BOTH	PRACTICE	f
+84	1	3	6	14	74	32	2	4	BOTH	PRACTICE	f
+85	1	3	5	26	94	21	4	2	BOTH	LAB	f
+86	1	3	5	26	94	21	4	1	BOTH	LAB	f
+87	1	3	6	26	94	21	1	4	BOTH	LAB	f
+88	1	3	6	26	94	21	2	2	BOTH	LAB	f
+89	1	10	\N	7	13	12	4	1	BOTH	LECTURE	f
+90	1	11	\N	7	13	12	4	3	BOTH	LECTURE	f
+91	1	7	\N	1	20	30	5	3	BOTH	LECTURE	f
+92	1	7	13	3	14	34	1	1	BOTH	PRACTICE	f
+93	1	7	14	3	14	32	3	2	BOTH	PRACTICE	f
+94	1	7	13	4	9	35	2	4	BOTH	PRACTICE	f
+95	1	7	14	4	9	35	4	3	BOTH	PRACTICE	f
+96	1	7	\N	5	71	14	5	4	BOTH	LECTURE	f
+97	1	7	\N	7	26	7	2	3	BOTH	LECTURE	f
+98	1	7	\N	7	26	7	4	2	BOTH	LECTURE	f
+99	1	7	13	8	66	3	1	4	BOTH	LAB	f
+100	1	7	14	8	66	3	3	3	BOTH	LAB	f
+101	1	7	\N	9	56	10	5	2	BOTH	LECTURE	f
+102	1	7	\N	10	69	2	3	4	BOTH	LECTURE	f
+103	1	7	13	14	74	34	1	2	BOTH	PRACTICE	f
+104	1	7	14	14	74	32	4	4	BOTH	PRACTICE	f
+105	1	7	13	26	94	21	3	3	BOTH	LAB	f
+106	1	7	13	26	94	21	5	1	BOTH	LAB	f
+107	1	7	14	26	94	21	2	4	BOTH	LAB	f
+108	1	7	14	26	94	21	1	2	BOTH	LAB	f
+109	1	8	\N	1	20	30	5	4	BOTH	LECTURE	f
+110	1	8	15	3	14	34	1	4	BOTH	PRACTICE	f
+111	1	8	16	3	14	32	3	1	BOTH	PRACTICE	f
+112	1	8	15	4	9	35	4	4	BOTH	PRACTICE	f
+113	1	8	16	4	9	35	2	1	BOTH	PRACTICE	f
+114	1	8	\N	5	71	14	5	1	BOTH	LECTURE	f
+115	1	8	\N	7	26	7	2	2	BOTH	LECTURE	f
+116	1	8	\N	7	26	7	4	1	BOTH	LECTURE	f
+117	1	8	15	8	66	3	3	4	BOTH	LAB	f
+118	1	8	16	8	66	3	1	1	BOTH	LAB	f
+119	1	8	\N	9	56	10	2	3	BOTH	LECTURE	f
+120	1	8	\N	10	69	2	4	2	BOTH	LECTURE	f
+121	1	8	15	14	74	36	1	1	BOTH	PRACTICE	f
+122	1	8	16	14	74	34	3	2	BOTH	PRACTICE	f
+123	1	8	15	26	94	21	5	2	BOTH	LAB	f
+124	1	8	15	26	94	21	5	3	BOTH	LAB	f
+125	1	8	16	26	94	21	3	4	BOTH	LAB	f
+126	1	8	16	26	94	21	1	5	BOTH	LAB	f
+127	1	12	\N	1	20	30	3	1	BOTH	LECTURE	f
+128	1	12	23	3	14	34	4	4	BOTH	PRACTICE	f
+129	1	12	24	3	14	34	2	4	BOTH	PRACTICE	f
+130	1	12	23	4	9	35	5	2	BOTH	PRACTICE	f
+131	1	12	24	4	9	35	1	4	BOTH	PRACTICE	f
+132	1	12	\N	5	71	14	3	2	BOTH	LECTURE	f
+133	1	12	\N	7	26	15	5	1	BOTH	LECTURE	f
+134	1	12	\N	7	26	7	1	2	BOTH	LECTURE	f
+135	1	12	23	8	66	3	2	3	BOTH	LAB	f
+136	1	12	24	8	66	3	4	4	BOTH	LAB	f
+137	1	12	\N	9	56	10	2	2	BOTH	LECTURE	f
+138	1	12	\N	10	69	2	4	3	BOTH	LECTURE	f
+139	1	12	23	14	74	32	5	3	BOTH	PRACTICE	f
+140	1	12	24	14	74	34	3	3	BOTH	PRACTICE	f
+141	1	12	23	26	94	21	1	1	BOTH	LAB	f
+142	1	12	23	26	94	21	5	4	BOTH	LAB	f
+143	1	13	\N	1	20	30	3	2	BOTH	LECTURE	f
+144	1	13	25	3	14	15	2	3	BOTH	PRACTICE	f
+145	1	13	26	3	14	32	4	3	BOTH	PRACTICE	f
+146	1	13	25	4	9	35	5	1	BOTH	PRACTICE	f
+147	1	13	26	4	9	35	1	3	BOTH	PRACTICE	f
+148	1	13	\N	5	71	14	3	3	BOTH	LECTURE	f
+149	1	13	\N	7	26	7	5	3	BOTH	LECTURE	f
+150	1	13	\N	7	26	7	2	1	BOTH	LECTURE	f
+151	1	13	25	8	66	3	4	1	BOTH	LAB	f
+152	1	13	26	8	66	3	5	2	BOTH	LAB	f
+153	1	13	\N	9	56	10	1	4	BOTH	LECTURE	f
+154	1	13	\N	10	69	2	4	4	BOTH	LECTURE	f
+155	1	13	25	14	74	34	3	4	BOTH	PRACTICE	f
+156	1	13	26	14	74	32	2	2	BOTH	PRACTICE	f
+157	1	14	\N	1	20	30	3	3	BOTH	LECTURE	f
+158	1	14	27	3	14	32	4	2	BOTH	PRACTICE	f
+159	1	14	28	3	14	34	2	2	BOTH	PRACTICE	f
+160	1	14	27	4	9	35	1	2	BOTH	PRACTICE	f
+161	1	14	28	4	9	35	5	3	BOTH	PRACTICE	f
+162	1	14	\N	5	71	14	3	4	BOTH	LECTURE	f
+163	1	14	\N	7	26	15	5	4	BOTH	LECTURE	f
+164	1	14	\N	7	26	15	4	4	BOTH	LECTURE	f
+165	1	14	27	8	66	3	2	2	BOTH	LAB	f
+166	1	14	28	8	66	3	2	1	BOTH	LAB	f
+167	1	14	\N	9	56	10	1	3	BOTH	LECTURE	f
+168	1	14	\N	10	69	2	3	1	BOTH	LECTURE	f
+169	1	14	27	14	74	34	4	3	BOTH	PRACTICE	f
+170	1	14	28	14	74	32	5	2	BOTH	PRACTICE	f
+171	1	17	\N	28	27	15	5	3	BOTH	PRACTICE	f
+172	1	17	\N	28	27	15	3	2	BOTH	PRACTICE	f
+173	1	17	\N	28	27	15	4	2	BOTH	PRACTICE	f
+174	1	17	\N	28	27	2	2	3	BOTH	PRACTICE	f
+175	1	17	\N	28	27	15	1	2	BOTH	PRACTICE	f
+176	1	17	\N	28	27	7	1	3	BOTH	PRACTICE	f
+177	1	27	53	100	41	40	4	1	BOTH	LAB	f
+178	1	27	53	100	41	40	5	2	BOTH	LAB	f
+179	1	27	53	100	41	40	3	3	BOTH	LAB	f
+180	1	27	54	100	41	40	1	1	BOTH	LAB	f
+181	1	27	54	100	41	40	2	3	BOTH	LAB	f
+182	1	27	54	100	41	40	5	1	BOTH	LAB	f
+183	1	28	55	100	41	40	3	2	BOTH	LAB	f
+184	1	28	55	100	41	40	4	3	BOTH	LAB	f
+185	1	28	55	100	41	40	2	2	BOTH	LAB	f
+186	1	28	56	100	41	40	1	3	BOTH	LAB	f
+187	1	28	56	100	41	40	1	4	BOTH	LAB	f
+188	1	28	56	100	41	40	4	4	BOTH	LAB	f
+189	1	20	\N	28	27	15	3	1	BOTH	PRACTICE	f
+190	1	20	\N	28	27	15	5	2	BOTH	PRACTICE	f
+191	1	20	\N	28	27	15	2	2	BOTH	PRACTICE	f
+192	1	20	\N	28	27	15	1	1	BOTH	PRACTICE	f
+193	1	20	\N	28	27	15	4	1	BOTH	PRACTICE	f
+194	1	20	\N	28	27	2	5	1	BOTH	PRACTICE	f
+195	2	1	\N	1	20	30	5	4	BOTH	LECTURE	f
+196	2	1	1	3	78	16	3	4	BOTH	PRACTICE	f
+197	2	1	2	3	78	16	4	1	BOTH	PRACTICE	f
+198	2	1	1	4	62	15	2	4	BOTH	PRACTICE	f
+199	2	1	2	4	62	15	1	2	BOTH	PRACTICE	f
+200	2	1	\N	5	71	14	4	3	BOTH	LECTURE	f
+201	2	1	\N	7	26	7	1	3	BOTH	LECTURE	f
+202	2	1	\N	7	26	7	5	3	BOTH	LECTURE	f
+203	2	1	1	8	94	21	3	2	BOTH	LAB	f
+204	2	1	2	8	94	21	2	4	BOTH	LAB	f
+205	2	1	\N	9	56	10	4	4	BOTH	LECTURE	f
+206	2	1	\N	10	69	2	1	4	BOTH	LECTURE	f
+207	2	1	1	14	79	32	3	3	BOTH	PRACTICE	f
+208	2	1	2	14	79	32	2	3	BOTH	PRACTICE	f
+209	2	1	1	26	73	32	5	2	BOTH	LAB	f
+210	2	1	2	26	73	32	4	2	BOTH	LAB	f
+211	2	1	1	26	94	21	3	1	BOTH	LAB	f
+212	2	1	2	26	94	21	2	2	BOTH	LAB	f
+213	2	2	3	3	14	32	5	1	BOTH	PRACTICE	f
+214	2	2	4	3	14	32	4	3	BOTH	PRACTICE	f
+215	2	2	\N	7	26	7	1	2	BOTH	LECTURE	f
+216	2	2	\N	7	26	7	2	2	BOTH	LECTURE	f
+217	2	2	3	14	16	32	3	1	BOTH	PRACTICE	f
+218	2	2	4	14	16	32	3	2	BOTH	PRACTICE	f
+219	2	2	3	26	73	32	5	3	BOTH	LAB	f
+220	2	2	4	26	73	32	4	1	BOTH	LAB	f
+221	2	2	3	26	66	3	1	3	BOTH	LAB	f
+222	2	2	4	26	66	3	2	4	BOTH	LAB	f
+223	2	4	7	1	38	18	4	1	BOTH	PRACTICE	f
+224	2	4	8	1	38	18	5	2	BOTH	PRACTICE	f
+225	2	4	\N	7	11	7	3	1	BOTH	LECTURE	f
+228	2	9	\N	7	13	12	1	2	BOTH	LECTURE	f
+229	2	15	\N	28	33	19	1	3	BOTH	PRACTICE	f
+230	2	15	\N	28	33	19	4	2	BOTH	PRACTICE	f
+231	2	15	\N	28	33	19	2	3	BOTH	PRACTICE	f
+232	2	15	\N	28	27	7	3	2	BOTH	PRACTICE	f
+233	2	15	\N	28	27	7	5	4	BOTH	PRACTICE	f
+234	2	15	\N	28	27	7	3	3	BOTH	PRACTICE	f
+235	2	16	\N	28	27	34	5	3	BOTH	PRACTICE	f
+236	2	16	\N	28	27	34	3	4	BOTH	PRACTICE	f
+237	2	16	\N	28	27	34	4	2	BOTH	PRACTICE	f
+238	2	16	\N	28	59	22	2	1	BOTH	PRACTICE	f
+239	2	16	\N	28	59	22	1	4	BOTH	PRACTICE	f
+240	2	16	\N	28	59	22	2	2	BOTH	PRACTICE	f
+241	2	19	37	31	17	39	3	2	BOTH	LAB	f
+242	2	19	37	31	17	39	5	4	BOTH	LAB	f
+243	2	19	37	31	17	39	1	4	BOTH	LAB	f
+244	2	19	37	31	17	39	4	2	BOTH	LAB	f
+245	2	19	38	31	17	39	2	3	BOTH	LAB	f
+246	2	19	38	31	17	39	2	4	BOTH	LAB	f
+247	2	19	38	31	17	39	5	3	BOTH	LAB	f
+248	2	19	38	31	17	39	3	1	BOTH	LAB	f
+249	2	19	37	31	30	38	4	3	BOTH	LAB	f
+250	2	19	37	31	30	38	1	3	BOTH	LAB	f
+251	2	19	37	31	30	38	4	4	BOTH	LAB	f
+252	2	19	37	31	30	38	3	3	BOTH	LAB	f
+253	2	19	38	31	30	38	1	4	BOTH	LAB	f
+254	2	19	38	31	30	38	5	4	BOTH	LAB	f
+255	2	19	38	31	30	38	3	2	BOTH	LAB	f
+256	2	19	38	31	30	38	2	1	BOTH	LAB	f
+257	2	26	51	100	72	9	5	4	BOTH	LAB	f
+258	2	26	51	100	72	9	4	1	BOTH	LAB	f
+259	2	26	52	100	72	9	3	2	BOTH	LAB	f
+260	2	26	52	100	72	9	1	3	BOTH	LAB	f
+261	2	26	51	100	41	40	2	2	BOTH	LAB	f
+262	2	26	52	100	41	40	3	3	BOTH	LAB	f
+263	2	51	\N	93	77	28	3	5	BOTH	LECTURE	f
+264	2	51	\N	93	12	7	2	6	BOTH	LECTURE	f
+265	2	3	\N	1	20	30	5	3	BOTH	LECTURE	f
+266	2	3	5	3	78	16	3	3	BOTH	PRACTICE	f
+267	2	3	6	3	78	16	4	2	BOTH	PRACTICE	f
+268	2	3	5	4	62	15	1	1	BOTH	PRACTICE	f
+269	2	3	6	4	62	15	2	3	BOTH	PRACTICE	f
+270	2	3	\N	5	71	14	5	4	BOTH	LECTURE	f
+271	2	3	\N	7	26	7	1	4	BOTH	LECTURE	f
+272	2	3	\N	7	26	7	2	4	BOTH	LECTURE	f
+273	2	3	5	8	94	21	3	4	BOTH	LAB	f
+274	2	3	6	8	94	21	4	3	BOTH	LAB	f
+275	2	3	\N	9	56	10	3	1	BOTH	LECTURE	f
+276	2	3	\N	10	69	2	1	3	BOTH	LECTURE	f
+277	2	3	5	14	79	32	2	2	BOTH	PRACTICE	f
+278	2	3	6	14	79	32	4	4	BOTH	PRACTICE	f
+279	2	3	5	26	73	40	5	1	BOTH	LAB	f
+280	2	3	6	26	73	32	2	1	BOTH	LAB	f
+281	2	3	5	26	94	21	5	2	BOTH	LAB	f
+282	2	3	6	26	94	21	3	3	BOTH	LAB	f
+283	2	10	\N	7	13	12	1	3	BOTH	LECTURE	f
+284	2	11	\N	7	13	12	1	4	BOTH	LECTURE	f
+285	2	7	\N	1	20	30	5	2	BOTH	LECTURE	f
+286	2	7	13	3	78	16	3	2	BOTH	PRACTICE	f
+287	2	7	14	3	78	16	4	3	BOTH	PRACTICE	f
+288	2	7	13	4	62	15	1	3	BOTH	PRACTICE	f
+289	2	7	14	4	62	15	2	2	BOTH	PRACTICE	f
+290	2	7	\N	5	71	14	5	3	BOTH	LECTURE	f
+291	2	7	\N	7	26	7	2	1	BOTH	LECTURE	f
+292	2	7	\N	7	26	7	4	2	BOTH	LECTURE	f
+293	2	7	13	8	94	21	1	4	BOTH	LAB	f
+294	2	7	14	8	94	21	2	3	BOTH	LAB	f
+295	2	7	\N	9	56	10	3	3	BOTH	LECTURE	f
+296	2	7	\N	10	69	2	3	4	BOTH	LECTURE	f
+297	2	7	13	14	79	34	4	3	BOTH	PRACTICE	f
+298	2	7	14	14	79	34	5	1	BOTH	PRACTICE	f
+299	2	7	13	26	73	32	1	1	BOTH	LAB	f
+300	2	7	14	26	73	32	2	4	BOTH	LAB	f
+301	2	7	13	26	94	21	4	4	BOTH	LAB	f
+302	2	7	14	26	94	21	1	3	BOTH	LAB	f
+303	2	8	\N	1	20	30	5	1	BOTH	LECTURE	f
+304	2	8	15	3	78	16	4	4	BOTH	PRACTICE	f
+305	2	8	16	3	78	16	3	1	BOTH	PRACTICE	f
+306	2	8	15	4	62	15	2	1	BOTH	PRACTICE	f
+307	2	8	16	4	62	15	1	4	BOTH	PRACTICE	f
+308	2	8	\N	5	71	14	5	2	BOTH	LECTURE	f
+309	2	8	\N	7	26	7	4	3	BOTH	LECTURE	f
+310	2	8	\N	7	26	15	3	2	BOTH	LECTURE	f
+311	2	8	15	8	94	21	1	2	BOTH	LAB	f
+312	2	8	16	8	94	21	2	1	BOTH	LAB	f
+313	2	8	\N	9	56	10	5	3	BOTH	LECTURE	f
+314	2	8	\N	10	69	2	3	3	BOTH	LECTURE	f
+315	2	8	15	14	79	34	2	4	BOTH	PRACTICE	f
+316	2	8	16	14	79	36	4	2	BOTH	PRACTICE	f
+317	2	8	15	26	73	32	1	3	BOTH	LAB	f
+318	2	8	16	26	73	32	1	2	BOTH	LAB	f
+319	2	8	15	26	94	21	4	2	BOTH	LAB	f
+320	2	8	16	26	94	21	5	4	BOTH	LAB	f
+321	2	12	\N	1	20	30	1	2	BOTH	LECTURE	f
+322	2	12	23	3	78	16	2	1	BOTH	PRACTICE	f
+323	2	12	24	3	78	16	5	3	BOTH	PRACTICE	f
+324	2	12	23	4	62	15	4	3	BOTH	PRACTICE	f
+325	2	12	24	4	62	15	3	1	BOTH	PRACTICE	f
+326	2	12	\N	5	71	14	4	2	BOTH	LECTURE	f
+327	2	12	\N	7	26	7	5	2	BOTH	LECTURE	f
+328	2	12	\N	7	26	15	3	3	BOTH	LECTURE	f
+329	2	12	23	8	94	21	1	1	BOTH	LAB	f
+330	2	12	24	8	94	21	5	1	BOTH	LAB	f
+331	2	12	\N	9	56	10	3	2	BOTH	LECTURE	f
+332	2	12	\N	10	69	2	2	2	BOTH	LECTURE	f
+333	2	12	23	14	79	34	4	1	BOTH	PRACTICE	f
+334	2	12	24	14	79	34	2	1	BOTH	PRACTICE	f
+335	2	12	23	26	73	32	1	4	BOTH	LAB	f
+336	2	12	24	26	73	32	5	4	BOTH	LAB	f
+337	2	13	\N	1	20	30	1	1	BOTH	LECTURE	f
+338	2	13	25	3	78	16	5	2	BOTH	PRACTICE	f
+339	2	13	26	3	78	16	2	2	BOTH	PRACTICE	f
+340	2	13	25	4	62	15	4	4	BOTH	PRACTICE	f
+341	2	13	26	4	62	34	3	2	BOTH	PRACTICE	f
+342	2	13	\N	5	71	14	4	1	BOTH	LECTURE	f
+343	2	13	\N	7	26	35	3	1	BOTH	LECTURE	f
+344	2	13	\N	7	26	7	5	1	BOTH	LECTURE	f
+345	2	13	\N	9	56	10	1	2	BOTH	LECTURE	f
+346	2	13	\N	10	69	2	2	1	BOTH	LECTURE	f
+347	2	13	25	14	79	32	3	4	BOTH	PRACTICE	f
+348	2	13	26	14	79	34	5	2	BOTH	PRACTICE	f
+349	2	13	25	26	73	40	4	3	BOTH	LAB	f
+350	2	13	26	26	73	40	2	3	BOTH	LAB	f
+351	2	14	\N	1	20	30	1	3	BOTH	LECTURE	f
+352	2	14	27	3	78	16	2	3	BOTH	PRACTICE	f
+353	2	14	28	3	78	16	5	1	BOTH	PRACTICE	f
+354	2	14	27	4	62	15	4	2	BOTH	PRACTICE	f
+355	2	14	28	4	62	34	3	3	BOTH	PRACTICE	f
+356	2	14	\N	5	71	14	4	4	BOTH	LECTURE	f
+357	2	14	\N	7	26	7	3	4	BOTH	LECTURE	f
+358	2	14	\N	7	26	15	5	4	BOTH	LECTURE	f
+359	2	14	\N	9	56	10	1	4	BOTH	LECTURE	f
+360	2	14	\N	10	69	2	2	4	BOTH	LECTURE	f
+361	2	14	27	14	79	36	3	2	BOTH	PRACTICE	f
+362	2	14	28	14	79	36	5	3	BOTH	PRACTICE	f
+363	2	14	27	26	73	41	2	2	BOTH	LAB	f
+364	2	14	28	26	73	40	3	2	BOTH	LAB	f
+365	2	17	\N	28	33	19	2	4	BOTH	PRACTICE	f
+366	2	17	\N	28	33	19	4	1	BOTH	PRACTICE	f
+367	2	17	\N	28	33	19	1	4	BOTH	PRACTICE	f
+368	2	17	\N	28	27	15	5	2	BOTH	PRACTICE	f
+369	2	17	\N	28	27	2	3	1	BOTH	PRACTICE	f
+370	2	17	\N	28	27	15	5	1	BOTH	PRACTICE	f
+371	2	27	53	100	72	9	1	2	BOTH	LAB	f
+372	2	27	53	100	72	9	3	1	BOTH	LAB	f
+373	2	27	54	100	72	9	4	2	BOTH	LAB	f
+374	2	27	54	100	72	9	5	3	BOTH	LAB	f
+375	2	27	53	100	41	41	2	3	BOTH	LAB	f
+376	2	27	54	100	41	41	3	2	BOTH	LAB	f
+377	2	28	55	100	72	9	1	1	BOTH	LAB	f
+378	2	28	55	100	72	9	4	3	BOTH	LAB	f
+379	2	28	56	100	72	9	3	3	BOTH	LAB	f
+380	2	28	56	100	72	9	5	2	BOTH	LAB	f
+381	2	28	55	100	41	40	2	1	BOTH	LAB	f
+382	2	28	56	100	41	40	3	4	BOTH	LAB	f
+383	2	20	\N	28	33	19	1	2	BOTH	PRACTICE	f
+384	2	20	\N	28	33	19	4	3	BOTH	PRACTICE	f
+385	2	20	\N	28	33	19	2	2	BOTH	PRACTICE	f
+386	2	20	\N	28	27	7	4	1	BOTH	PRACTICE	f
+387	2	20	\N	28	27	35	1	3	BOTH	PRACTICE	f
+388	2	20	\N	28	27	35	2	3	BOTH	PRACTICE	f
+389	2	21	\N	28	33	19	2	1	BOTH	PRACTICE	f
+390	2	21	\N	28	33	19	1	1	BOTH	PRACTICE	f
+391	2	21	\N	28	33	19	4	4	BOTH	PRACTICE	f
+392	2	21	\N	28	27	34	1	2	BOTH	PRACTICE	f
+393	2	21	\N	28	27	34	2	2	BOTH	PRACTICE	f
+394	2	21	\N	28	27	36	4	3	BOTH	PRACTICE	f
+395	2	22	\N	28	33	19	3	4	BOTH	PRACTICE	f
+396	2	22	\N	28	33	19	5	1	BOTH	PRACTICE	f
+397	2	22	\N	28	33	19	5	2	BOTH	PRACTICE	f
+398	2	22	\N	28	27	35	2	1	BOTH	PRACTICE	f
+399	2	22	\N	28	27	35	1	1	BOTH	PRACTICE	f
+400	2	22	\N	28	27	7	4	4	BOTH	PRACTICE	f
+401	2	24	\N	28	33	19	5	3	BOTH	PRACTICE	f
+402	2	24	\N	28	33	19	3	3	BOTH	PRACTICE	f
+403	2	24	\N	28	33	19	5	4	BOTH	PRACTICE	f
+404	2	29	57	100	72	9	3	4	BOTH	LAB	f
+405	2	29	57	100	72	9	4	4	BOTH	LAB	f
+406	2	29	58	100	72	9	1	4	BOTH	LAB	f
+407	2	29	58	100	72	9	5	1	BOTH	LAB	f
+408	2	29	57	100	41	40	2	4	BOTH	LAB	f
+409	2	29	58	100	41	40	5	2	BOTH	LAB	f
+410	2	30	59	100	72	9	2	2	BOTH	LAB	f
+411	2	30	59	100	72	9	2	3	BOTH	LAB	f
+412	2	30	59	100	41	40	5	3	BOTH	LAB	f
+413	2	30	60	100	41	40	3	1	BOTH	LAB	f
+414	3	1	\N	1	20	30	5	3	BOTH	LECTURE	f
+415	3	1	1	3	78	16	2	2	BOTH	PRACTICE	f
+416	3	1	2	3	78	16	3	1	BOTH	PRACTICE	f
+417	3	1	1	4	62	15	1	3	BOTH	PRACTICE	f
+418	3	1	2	4	62	15	4	4	BOTH	PRACTICE	f
+419	3	1	\N	5	71	14	5	4	BOTH	LECTURE	f
+420	3	1	\N	7	26	7	3	4	BOTH	LECTURE	f
+421	3	1	1	8	94	21	2	3	BOTH	LAB	f
+422	3	1	2	8	94	21	1	3	BOTH	LAB	f
+423	3	1	\N	9	56	10	4	2	BOTH	LECTURE	f
+424	3	1	\N	10	69	2	4	3	BOTH	LECTURE	f
+425	3	1	1	14	79	32	1	4	BOTH	PRACTICE	f
+426	3	1	2	14	79	32	3	2	BOTH	PRACTICE	f
+427	3	1	1	14	74	32	2	4	BOTH	PRACTICE	f
+428	3	1	2	14	74	32	5	1	BOTH	PRACTICE	f
+429	3	2	3	3	14	32	2	3	BOTH	PRACTICE	f
+430	3	2	4	3	14	34	5	1	BOTH	PRACTICE	f
+431	3	2	\N	7	26	7	3	3	BOTH	LECTURE	f
+432	3	2	3	14	16	32	4	3	BOTH	PRACTICE	f
+433	3	2	4	14	16	32	1	1	BOTH	PRACTICE	f
+434	3	2	3	14	64	32	4	4	BOTH	PRACTICE	f
+435	3	2	4	14	64	32	5	2	BOTH	PRACTICE	f
+436	3	4	7	1	38	18	3	2	BOTH	PRACTICE	f
+437	3	4	8	1	38	18	2	3	BOTH	PRACTICE	f
+438	3	4	\N	7	11	7	4	3	BOTH	LECTURE	f
+439	3	4	\N	7	11	7	5	3	BOTH	LECTURE	f
+440	3	5	\N	63	80	27	1	1	BOTH	LECTURE	f
+441	3	9	\N	7	13	12	4	2	BOTH	LECTURE	f
+442	3	9	\N	7	13	12	1	1	BOTH	LECTURE	f
+443	3	9	\N	19	70	24	3	3	BOTH	LECTURE	f
+444	3	15	\N	15	71	14	5	3	BOTH	LECTURE	f
+445	3	15	\N	15	71	14	3	2	BOTH	LECTURE	f
+446	3	15	\N	12	42	15	4	3	BOTH	PRACTICE	f
+447	3	15	\N	14	68	7	1	1	BOTH	PRACTICE	f
+448	3	15	\N	17	94	21	2	4	BOTH	LAB	f
+449	3	15	\N	17	94	21	1	2	BOTH	LAB	f
+450	3	15	\N	27	33	19	3	3	BOTH	PRACTICE	f
+451	3	15	\N	27	33	19	5	4	BOTH	PRACTICE	f
+452	3	15	\N	27	33	19	4	4	BOTH	PRACTICE	f
+453	3	15	\N	27	33	19	3	4	BOTH	PRACTICE	f
+454	3	15	\N	27	33	19	2	2	BOTH	PRACTICE	f
+455	3	15	\N	27	33	19	2	3	BOTH	PRACTICE	f
+456	3	16	\N	15	71	14	3	3	BOTH	LECTURE	f
+457	3	16	\N	15	71	14	5	2	BOTH	LECTURE	f
+458	3	16	\N	14	79	34	1	3	BOTH	PRACTICE	f
+459	3	16	\N	27	59	22	2	1	BOTH	PRACTICE	f
+460	3	16	\N	27	59	22	4	2	BOTH	PRACTICE	f
+461	3	16	\N	27	59	22	4	3	BOTH	PRACTICE	f
+462	3	16	\N	27	59	22	2	2	BOTH	PRACTICE	f
+463	3	16	\N	27	59	22	5	3	BOTH	PRACTICE	f
+464	3	16	\N	27	59	22	3	4	BOTH	PRACTICE	f
+465	3	18	35	14	5	32	5	4	BOTH	PRACTICE	f
+466	3	18	35	14	5	34	3	2	BOTH	PRACTICE	f
+467	3	18	36	14	5	34	4	3	BOTH	PRACTICE	f
+468	3	18	36	14	5	34	1	4	BOTH	PRACTICE	f
+469	3	18	35	14	68	32	2	1	BOTH	PRACTICE	f
+470	3	18	35	14	68	32	2	2	BOTH	PRACTICE	f
+471	3	18	36	14	68	32	1	2	BOTH	PRACTICE	f
+472	3	18	36	14	68	34	4	4	BOTH	PRACTICE	f
+503	3	19	37	29	21	34	5	4	BOTH	LAB	f
+504	3	19	37	29	21	34	2	3	BOTH	LAB	f
+505	3	19	37	29	21	34	1	2	BOTH	LAB	f
+506	3	19	37	29	21	34	4	1	BOTH	LAB	f
+507	3	19	38	29	21	40	3	2	BOTH	LAB	f
+508	3	19	38	29	21	34	1	1	BOTH	LAB	f
+509	3	19	38	29	21	34	3	1	BOTH	LAB	f
+510	3	19	38	29	21	34	2	4	BOTH	LAB	f
+511	3	19	37	29	17	39	4	3	BOTH	LAB	f
+512	3	19	37	29	17	39	3	3	BOTH	LAB	f
+513	3	19	37	29	17	39	1	3	BOTH	LAB	f
+514	3	19	37	29	17	39	2	2	BOTH	LAB	f
+515	3	23	45	59	29	32	4	2	BOTH	PRACTICE	f
+516	3	23	45	59	29	36	4	3	BOTH	PRACTICE	f
+517	3	23	45	59	29	36	1	4	BOTH	PRACTICE	f
+518	3	23	45	59	29	36	5	4	BOTH	PRACTICE	f
+519	3	23	46	59	29	36	2	1	BOTH	PRACTICE	f
+520	3	23	46	59	29	32	3	4	BOTH	PRACTICE	f
+521	3	23	46	59	29	36	2	2	BOTH	PRACTICE	f
+522	3	23	46	59	29	32	1	3	BOTH	PRACTICE	f
+523	3	23	45	59	10	36	5	1	BOTH	PRACTICE	f
+524	3	23	45	59	10	32	3	3	BOTH	PRACTICE	f
+525	3	23	45	59	10	36	5	2	BOTH	PRACTICE	f
+526	3	23	45	59	10	36	3	4	BOTH	PRACTICE	f
+527	3	23	46	59	10	36	2	3	BOTH	PRACTICE	f
+528	3	23	46	59	10	7	1	4	BOTH	PRACTICE	f
+529	3	23	46	59	10	32	4	1	BOTH	PRACTICE	f
+530	3	23	46	59	10	36	4	2	BOTH	PRACTICE	f
+534	3	26	\N	96	6	25	4	3	BOTH	PRACTICE	f
+535	3	26	\N	96	6	25	5	1	BOTH	PRACTICE	f
+536	3	26	\N	96	46	26	2	3	BOTH	PRACTICE	f
+537	3	26	\N	96	46	26	1	4	BOTH	PRACTICE	f
+546	3	31	61	37	28	40	2	7	BOTH	LAB	f
+547	3	31	61	37	28	40	1	7	BOTH	LAB	f
+548	3	31	61	37	28	40	2	5	BOTH	LAB	f
+549	3	31	62	37	28	40	3	7	BOTH	LAB	f
+550	3	31	62	37	28	40	5	5	BOTH	LAB	f
+551	3	31	62	37	28	40	4	5	BOTH	LAB	f
+562	3	36	71	46	28	40	1	5	BOTH	LAB	f
+563	3	36	71	46	28	40	3	4	BOTH	LAB	f
+564	3	36	71	46	28	40	4	4	BOTH	LAB	f
+565	3	36	72	46	28	40	2	4	BOTH	LAB	f
+566	3	36	71	46	30	38	5	7	BOTH	LAB	f
+567	3	36	71	46	30	38	2	5	BOTH	LAB	f
+568	3	36	71	46	30	38	3	7	BOTH	LAB	f
+569	3	36	72	46	30	38	5	6	BOTH	LAB	f
+570	3	36	72	46	30	38	1	5	BOTH	LAB	f
+571	3	36	72	46	30	38	4	6	BOTH	LAB	f
+572	3	40	79	69	81	32	2	5	BOTH	PRACTICE	f
+573	3	40	79	69	81	32	4	6	BOTH	PRACTICE	f
+574	3	40	79	69	81	32	1	7	BOTH	PRACTICE	f
+575	3	40	79	69	81	32	3	7	BOTH	PRACTICE	f
+576	3	40	79	69	81	32	2	6	BOTH	PRACTICE	f
+577	3	40	80	69	81	32	5	6	BOTH	PRACTICE	f
+578	3	40	80	69	81	32	5	7	BOTH	PRACTICE	f
+579	3	40	80	69	81	32	1	6	BOTH	PRACTICE	f
+580	3	40	80	69	81	32	3	6	BOTH	PRACTICE	f
+581	3	40	80	69	81	32	4	7	BOTH	PRACTICE	f
+582	3	40	79	69	29	32	1	5	BOTH	PRACTICE	f
+583	3	40	79	69	29	34	4	7	BOTH	PRACTICE	f
+584	3	40	79	69	29	32	3	5	BOTH	PRACTICE	f
+585	3	40	79	69	29	32	2	7	BOTH	PRACTICE	f
+586	3	40	79	69	29	32	5	5	BOTH	PRACTICE	f
+587	3	40	80	69	29	34	2	6	BOTH	PRACTICE	f
+588	3	40	80	69	29	34	1	7	BOTH	PRACTICE	f
+589	3	40	80	69	29	34	4	6	BOTH	PRACTICE	f
+590	3	40	80	69	29	34	3	7	BOTH	PRACTICE	f
+591	3	40	80	69	29	32	4	5	BOTH	PRACTICE	f
+592	3	41	\N	71	34	7	2	7	BOTH	PRACTICE	f
+593	3	41	\N	71	34	7	5	7	BOTH	PRACTICE	f
+594	3	37	73	74	83	34	4	5	BOTH	PRACTICE	f
+595	3	37	73	74	83	34	5	6	BOTH	PRACTICE	f
+596	3	37	74	74	83	34	3	6	BOTH	PRACTICE	f
+597	3	37	74	74	83	34	2	5	BOTH	PRACTICE	f
+598	3	37	73	74	63	34	1	5	BOTH	PRACTICE	f
+599	3	37	74	74	63	36	3	7	BOTH	PRACTICE	f
+600	3	42	\N	87	19	15	4	6	BOTH	PRACTICE	f
+601	3	42	\N	87	19	15	4	7	BOTH	PRACTICE	f
+602	3	42	\N	87	19	15	2	7	BOTH	PRACTICE	f
+603	3	42	\N	87	19	15	5	6	BOTH	PRACTICE	f
+604	3	43	\N	110	72	9	4	5	BOTH	PRACTICE	f
+607	3	45	\N	116	82	8	1	5	BOTH	PRACTICE	f
+608	3	45	\N	116	82	8	5	6	BOTH	PRACTICE	f
+611	3	47	\N	49	60	7	5	5	BOTH	PRACTICE	f
+612	3	47	\N	49	60	7	3	5	BOTH	PRACTICE	f
+613	3	47	\N	49	60	7	2	5	BOTH	PRACTICE	f
+614	3	47	\N	50	30	38	4	5	BOTH	LAB	f
+615	3	47	\N	50	30	38	1	6	BOTH	LAB	f
+616	3	51	\N	92	1	35	2	7	BOTH	PRACTICE	f
+617	3	51	\N	92	1	7	3	6	BOTH	PRACTICE	f
+618	3	51	\N	92	1	7	1	7	BOTH	PRACTICE	f
+619	3	51	\N	92	1	7	4	5	BOTH	PRACTICE	f
+620	3	49	\N	95	34	7	5	6	BOTH	PRACTICE	f
+621	3	49	\N	95	34	7	2	6	BOTH	PRACTICE	f
+622	3	50	\N	89	19	34	5	5	BOTH	PRACTICE	f
+623	3	50	\N	89	19	15	2	6	BOTH	PRACTICE	f
+624	3	50	\N	89	19	36	4	5	BOTH	PRACTICE	f
+625	3	3	\N	1	20	30	5	4	BOTH	LECTURE	f
+626	3	3	5	3	78	16	2	1	BOTH	PRACTICE	f
+627	3	3	6	3	78	16	3	2	BOTH	PRACTICE	f
+628	3	3	5	4	62	15	1	2	BOTH	PRACTICE	f
+629	3	3	6	4	62	35	4	3	BOTH	PRACTICE	f
+630	3	3	\N	5	71	14	3	1	BOTH	LECTURE	f
+631	3	3	\N	7	26	7	5	1	BOTH	LECTURE	f
+632	3	3	5	8	94	21	2	2	BOTH	LAB	f
+633	3	3	6	8	94	21	1	4	BOTH	LAB	f
+634	3	3	\N	9	56	10	4	1	BOTH	LECTURE	f
+635	3	3	\N	10	69	2	4	2	BOTH	LECTURE	f
+636	3	3	5	14	79	7	2	3	BOTH	PRACTICE	f
+637	3	3	6	14	79	36	3	3	BOTH	PRACTICE	f
+638	3	3	5	14	74	7	5	2	BOTH	PRACTICE	f
+639	3	3	6	14	74	36	1	1	BOTH	PRACTICE	f
+640	3	6	\N	63	80	27	1	2	BOTH	LECTURE	f
+641	3	10	\N	7	13	12	4	1	BOTH	LECTURE	f
+642	3	10	\N	7	13	12	1	2	BOTH	LECTURE	f
+643	3	10	\N	19	70	24	3	2	BOTH	LECTURE	f
+644	3	11	\N	7	13	12	4	3	BOTH	LECTURE	f
+645	3	11	\N	7	13	12	1	3	BOTH	LECTURE	f
+646	3	11	\N	19	70	24	3	4	BOTH	LECTURE	f
+647	3	7	\N	1	20	30	5	2	BOTH	LECTURE	f
+648	3	7	13	3	78	16	2	3	BOTH	PRACTICE	f
+649	3	7	14	3	78	16	3	3	BOTH	PRACTICE	f
+650	3	7	13	4	62	15	1	4	BOTH	PRACTICE	f
+651	3	7	14	4	62	15	4	2	BOTH	PRACTICE	f
+652	3	7	\N	5	71	14	3	4	BOTH	LECTURE	f
+653	3	7	\N	7	26	15	5	3	BOTH	LECTURE	f
+654	3	7	13	8	94	21	1	1	BOTH	LAB	f
+655	3	7	14	8	94	21	4	3	BOTH	LAB	f
+656	3	7	\N	9	56	10	2	2	BOTH	LECTURE	f
+657	3	7	\N	10	69	2	5	4	BOTH	LECTURE	f
+658	3	7	13	14	79	36	2	4	BOTH	PRACTICE	f
+659	3	7	14	14	79	32	3	1	BOTH	PRACTICE	f
+660	3	7	13	14	74	36	1	2	BOTH	PRACTICE	f
+661	3	7	14	14	74	36	4	4	BOTH	PRACTICE	f
+662	3	8	\N	1	20	30	5	1	BOTH	LECTURE	f
+663	3	8	15	3	78	16	2	4	BOTH	PRACTICE	f
+664	3	8	16	3	78	16	3	4	BOTH	PRACTICE	f
+665	3	8	15	4	62	15	1	1	BOTH	PRACTICE	f
+666	3	8	16	4	62	15	4	1	BOTH	PRACTICE	f
+667	3	8	\N	5	71	14	2	3	BOTH	LECTURE	f
+668	3	8	\N	7	26	15	5	2	BOTH	LECTURE	f
+669	3	8	15	8	94	21	4	4	BOTH	LAB	f
+670	3	8	16	8	94	21	4	2	BOTH	LAB	f
+671	3	8	\N	9	56	10	1	3	BOTH	LECTURE	f
+672	3	8	\N	10	69	2	3	2	BOTH	LECTURE	f
+673	3	8	15	14	79	7	1	2	BOTH	PRACTICE	f
+674	3	8	16	14	79	7	2	2	BOTH	PRACTICE	f
+675	3	8	15	14	74	32	5	3	BOTH	PRACTICE	f
+676	3	8	16	14	74	3	4	3	BOTH	PRACTICE	f
+677	3	12	\N	1	20	30	1	3	BOTH	LECTURE	f
+678	3	12	23	3	78	16	5	2	BOTH	PRACTICE	f
+679	3	12	24	3	78	16	4	4	BOTH	PRACTICE	f
+680	3	12	23	4	62	15	3	1	BOTH	PRACTICE	f
+681	3	12	24	4	62	15	2	1	BOTH	PRACTICE	f
+682	3	12	\N	5	71	14	2	2	BOTH	LECTURE	f
+683	3	12	\N	7	26	7	5	4	BOTH	LECTURE	f
+684	3	12	23	8	94	21	3	2	BOTH	LAB	f
+685	3	12	24	8	94	21	4	1	BOTH	LAB	f
+686	3	12	\N	9	56	10	1	4	BOTH	LECTURE	f
+687	3	12	\N	10	69	2	5	3	BOTH	LECTURE	f
+688	3	12	23	14	79	7	2	1	BOTH	PRACTICE	f
+689	3	12	24	14	79	15	3	4	BOTH	PRACTICE	f
+690	3	12	23	14	74	7	4	2	BOTH	PRACTICE	f
+691	3	12	24	14	74	15	2	3	BOTH	PRACTICE	f
+692	3	13	\N	1	20	30	1	4	BOTH	LECTURE	f
+693	3	13	25	3	78	16	4	3	BOTH	PRACTICE	f
+694	3	13	26	3	78	16	5	3	BOTH	PRACTICE	f
+695	3	13	25	4	62	15	3	2	BOTH	PRACTICE	f
+696	3	13	26	4	62	15	2	2	BOTH	PRACTICE	f
+697	3	13	\N	5	71	14	2	4	BOTH	LECTURE	f
+698	3	13	\N	7	26	7	1	3	BOTH	LECTURE	f
+699	3	13	25	8	94	21	3	3	BOTH	LAB	f
+700	3	13	26	8	94	21	5	4	BOTH	LAB	f
+701	3	13	\N	9	56	10	4	4	BOTH	LECTURE	f
+702	3	13	\N	10	69	2	4	1	BOTH	LECTURE	f
+703	3	13	25	14	79	35	1	1	BOTH	PRACTICE	f
+704	3	13	26	14	79	15	5	1	BOTH	PRACTICE	f
+705	3	13	25	14	74	35	2	2	BOTH	PRACTICE	f
+706	3	13	26	14	74	15	3	3	BOTH	PRACTICE	f
+707	3	14	\N	1	20	30	1	2	BOTH	LECTURE	f
+708	3	14	27	3	78	16	5	1	BOTH	PRACTICE	f
+709	3	14	28	3	78	16	4	2	BOTH	PRACTICE	f
+710	3	14	27	4	62	35	3	3	BOTH	PRACTICE	f
+711	3	14	28	4	62	35	2	3	BOTH	PRACTICE	f
+712	3	14	\N	5	71	14	1	3	BOTH	LECTURE	f
+713	3	14	\N	7	26	7	3	2	BOTH	LECTURE	f
+714	3	14	27	8	94	21	5	2	BOTH	LAB	f
+715	3	14	28	8	94	21	2	1	BOTH	LAB	f
+716	3	14	\N	9	56	10	4	3	BOTH	LECTURE	f
+717	3	14	\N	10	69	2	4	4	BOTH	LECTURE	f
+718	3	14	27	14	79	36	5	3	BOTH	PRACTICE	f
+719	3	14	28	14	79	35	5	2	BOTH	PRACTICE	f
+720	3	14	27	14	74	35	3	4	BOTH	PRACTICE	f
+721	3	14	28	14	74	35	1	4	BOTH	PRACTICE	f
+722	3	17	\N	15	71	14	5	1	BOTH	LECTURE	f
+723	3	17	\N	15	71	14	1	2	BOTH	LECTURE	f
+724	3	17	\N	12	42	35	4	2	BOTH	PRACTICE	f
+725	3	17	\N	14	68	2	2	3	BOTH	PRACTICE	f
+726	3	17	\N	17	94	21	3	4	BOTH	LAB	f
+727	3	17	\N	17	94	21	5	3	BOTH	LAB	f
+728	3	17	\N	27	33	19	2	4	BOTH	PRACTICE	f
+729	3	17	\N	27	33	19	4	3	BOTH	PRACTICE	f
+730	3	17	\N	27	33	19	1	3	BOTH	PRACTICE	f
+731	3	17	\N	27	33	19	3	2	BOTH	PRACTICE	f
+732	3	17	\N	27	33	19	1	4	BOTH	PRACTICE	f
+733	3	17	\N	27	33	19	2	1	BOTH	PRACTICE	f
+737	3	27	\N	96	6	25	4	4	BOTH	PRACTICE	f
+738	3	27	\N	96	6	25	5	2	BOTH	PRACTICE	f
+739	3	27	\N	96	46	26	1	1	BOTH	PRACTICE	f
+740	3	27	\N	96	46	26	5	3	BOTH	PRACTICE	f
+744	3	28	\N	96	6	25	4	2	BOTH	PRACTICE	f
+745	3	28	\N	96	6	25	1	2	BOTH	PRACTICE	f
+746	3	28	\N	96	46	26	5	4	BOTH	PRACTICE	f
+747	3	28	\N	96	46	26	4	3	BOTH	PRACTICE	f
+748	3	20	\N	15	71	14	2	1	BOTH	LECTURE	f
+749	3	20	\N	15	71	14	1	1	BOTH	LECTURE	f
+750	3	20	\N	12	42	7	4	4	BOTH	PRACTICE	f
+751	3	20	\N	14	68	2	5	2	BOTH	PRACTICE	f
+752	3	20	\N	27	33	19	3	1	BOTH	PRACTICE	f
+753	3	20	\N	27	33	19	1	2	BOTH	PRACTICE	f
+754	3	20	\N	27	33	19	5	3	BOTH	PRACTICE	f
+755	3	20	\N	27	33	19	4	2	BOTH	PRACTICE	f
+756	3	20	\N	27	33	19	4	1	BOTH	PRACTICE	f
+757	3	20	\N	27	33	19	5	1	BOTH	PRACTICE	f
+758	3	21	\N	15	71	14	1	4	BOTH	LECTURE	f
+759	3	21	\N	15	71	14	4	3	BOTH	LECTURE	f
+760	3	21	\N	12	42	35	5	3	BOTH	PRACTICE	f
+761	3	21	\N	14	68	7	2	4	BOTH	PRACTICE	f
+762	3	22	\N	15	71	14	4	2	BOTH	LECTURE	f
+763	3	22	\N	12	42	3	5	2	BOTH	PRACTICE	f
+764	3	22	\N	14	68	35	1	3	BOTH	PRACTICE	f
+765	3	24	\N	12	42	15	5	4	BOTH	PRACTICE	f
+766	3	24	\N	14	68	2	1	4	BOTH	PRACTICE	f
+767	3	25	\N	12	42	2	5	1	BOTH	PRACTICE	f
+768	3	25	\N	14	68	8	4	3	BOTH	PRACTICE	f
+770	3	29	\N	96	6	25	4	1	BOTH	PRACTICE	f
+771	3	29	\N	96	6	25	1	3	BOTH	PRACTICE	f
+772	3	30	\N	96	6	25	1	4	BOTH	PRACTICE	f
+773	3	30	\N	96	6	25	5	3	BOTH	PRACTICE	f
+774	3	38	75	74	83	7	4	6	BOTH	PRACTICE	f
+775	3	38	75	74	83	35	2	6	BOTH	PRACTICE	f
+776	3	38	76	74	83	36	5	5	BOTH	PRACTICE	f
+777	3	38	76	74	83	34	3	5	BOTH	PRACTICE	f
+778	3	38	75	74	63	34	1	6	BOTH	PRACTICE	f
+779	3	38	76	74	63	36	3	6	BOTH	PRACTICE	f
+780	3	39	77	74	83	36	4	7	BOTH	PRACTICE	f
+781	3	39	77	74	83	34	5	7	BOTH	PRACTICE	f
+782	3	39	78	74	83	34	2	7	BOTH	PRACTICE	f
+783	3	39	78	74	83	7	3	7	BOTH	PRACTICE	f
+784	3	39	77	74	63	15	1	7	BOTH	PRACTICE	f
+785	3	39	78	74	63	15	3	5	BOTH	PRACTICE	f
+786	3	44	\N	110	72	9	4	6	BOTH	PRACTICE	f
+787	3	46	\N	116	82	8	5	7	BOTH	PRACTICE	f
+788	3	46	\N	116	82	8	1	6	BOTH	PRACTICE	f
+791	3	48	\N	49	60	2	2	6	BOTH	PRACTICE	f
+792	3	48	\N	49	60	15	3	6	BOTH	PRACTICE	f
+793	3	48	\N	49	60	35	5	6	BOTH	PRACTICE	f
+794	3	48	\N	50	30	38	1	7	BOTH	LAB	f
+795	3	48	\N	50	30	38	4	7	BOTH	LAB	f
+796	4	1	\N	1	20	30	2	3	BOTH	LECTURE	f
+797	4	1	1	3	78	16	3	4	BOTH	PRACTICE	f
+798	4	1	2	3	78	16	5	3	BOTH	PRACTICE	f
+799	4	1	1	4	62	15	1	3	BOTH	PRACTICE	f
+800	4	1	2	4	62	15	4	2	BOTH	PRACTICE	f
+801	4	1	\N	5	71	14	2	4	BOTH	LECTURE	f
+802	4	1	\N	7	26	7	5	1	BOTH	LECTURE	f
+803	4	1	1	8	94	21	1	4	BOTH	LAB	f
+804	4	1	2	8	94	21	4	3	BOTH	LAB	f
+805	4	1	\N	9	56	10	3	1	BOTH	LECTURE	f
+806	4	1	\N	10	69	2	5	2	BOTH	LECTURE	f
+807	4	1	1	14	79	32	3	2	BOTH	PRACTICE	f
+808	4	1	2	14	79	32	4	4	BOTH	PRACTICE	f
+809	4	1	1	14	74	32	2	2	BOTH	PRACTICE	f
+810	4	1	2	14	74	32	1	4	BOTH	PRACTICE	f
+811	4	2	3	3	14	32	1	3	BOTH	PRACTICE	f
+812	4	2	4	3	14	34	2	2	BOTH	PRACTICE	f
+813	4	2	\N	7	26	7	5	2	BOTH	LECTURE	f
+814	4	2	3	14	16	32	3	3	BOTH	PRACTICE	f
+815	4	2	4	14	16	34	4	4	BOTH	PRACTICE	f
+816	4	2	3	14	64	34	1	4	BOTH	PRACTICE	f
+817	4	2	4	14	64	32	2	3	BOTH	PRACTICE	f
+818	4	4	7	1	38	18	2	3	BOTH	PRACTICE	f
+819	4	4	8	1	38	18	3	3	BOTH	PRACTICE	f
+820	4	4	\N	7	11	15	5	2	BOTH	LECTURE	f
+821	4	4	\N	7	11	7	1	1	BOTH	LECTURE	f
+822	4	5	\N	63	80	27	2	1	BOTH	LECTURE	f
+823	4	9	\N	7	13	12	4	1	BOTH	LECTURE	f
+824	4	9	\N	7	13	12	5	4	BOTH	LECTURE	f
+825	4	9	\N	19	70	24	2	4	BOTH	LECTURE	f
+826	4	15	\N	15	71	14	2	3	BOTH	LECTURE	f
+827	4	15	\N	15	71	14	1	4	BOTH	LECTURE	f
+828	4	15	\N	12	42	35	5	2	BOTH	PRACTICE	f
+829	4	15	\N	14	68	7	4	3	BOTH	PRACTICE	f
+830	4	15	\N	17	94	21	3	2	BOTH	LAB	f
+831	4	15	\N	17	94	21	4	4	BOTH	LAB	f
+832	4	15	\N	27	33	19	2	4	BOTH	PRACTICE	f
+833	4	15	\N	27	33	19	5	3	BOTH	PRACTICE	f
+834	4	15	\N	27	33	19	3	3	BOTH	PRACTICE	f
+835	4	15	\N	27	33	19	1	3	BOTH	PRACTICE	f
+836	4	15	\N	27	33	19	5	4	BOTH	PRACTICE	f
+837	4	15	\N	27	33	19	3	4	BOTH	PRACTICE	f
+838	4	16	\N	15	71	14	2	2	BOTH	LECTURE	f
+839	4	16	\N	15	71	14	1	3	BOTH	LECTURE	f
+840	4	16	\N	14	79	34	4	3	BOTH	PRACTICE	f
+841	4	16	\N	27	59	22	5	4	BOTH	PRACTICE	f
+842	4	16	\N	27	59	22	3	3	BOTH	PRACTICE	f
+843	4	16	\N	27	59	22	3	4	BOTH	PRACTICE	f
+844	4	16	\N	27	59	22	2	3	BOTH	PRACTICE	f
+845	4	16	\N	27	59	22	1	4	BOTH	PRACTICE	f
+846	4	16	\N	27	59	22	4	4	BOTH	PRACTICE	f
+847	4	18	35	14	5	32	4	1	BOTH	PRACTICE	f
+848	4	18	35	14	5	34	3	2	BOTH	PRACTICE	f
+849	4	18	36	14	5	32	5	3	BOTH	PRACTICE	f
+850	4	18	36	14	5	32	1	1	BOTH	PRACTICE	f
+851	4	18	35	14	68	32	2	4	BOTH	PRACTICE	f
+852	4	18	35	14	68	32	4	2	BOTH	PRACTICE	f
+853	4	18	36	14	68	34	2	3	BOTH	PRACTICE	f
+854	4	18	36	14	68	32	5	4	BOTH	PRACTICE	f
+885	4	19	37	29	21	34	5	1	BOTH	LAB	f
+886	4	19	37	29	21	34	4	1	BOTH	LAB	f
+887	4	19	37	29	21	34	1	1	BOTH	LAB	f
+888	4	19	37	29	21	40	2	3	BOTH	LAB	f
+889	4	19	38	29	21	40	3	2	BOTH	LAB	f
+890	4	19	38	29	21	34	3	1	BOTH	LAB	f
+891	4	19	38	29	21	34	5	3	BOTH	LAB	f
+892	4	19	38	29	21	40	2	2	BOTH	LAB	f
+893	4	19	37	29	17	39	1	2	BOTH	LAB	f
+894	4	19	37	29	17	39	4	2	BOTH	LAB	f
+895	4	19	37	29	17	39	2	4	BOTH	LAB	f
+896	4	19	37	29	17	39	4	3	BOTH	LAB	f
+897	4	23	45	59	29	36	1	1	BOTH	PRACTICE	f
+898	4	23	45	59	29	36	4	4	BOTH	PRACTICE	f
+899	4	23	45	59	29	32	5	1	BOTH	PRACTICE	f
+900	4	23	45	59	29	32	2	1	BOTH	PRACTICE	f
+901	4	23	46	59	29	32	3	4	BOTH	PRACTICE	f
+902	4	23	46	59	29	32	5	2	BOTH	PRACTICE	f
+903	4	23	46	59	29	36	3	3	BOTH	PRACTICE	f
+904	4	23	46	59	29	32	1	2	BOTH	PRACTICE	f
+905	4	23	45	59	10	36	2	2	BOTH	PRACTICE	f
+906	4	23	45	59	10	32	4	3	BOTH	PRACTICE	f
+907	4	23	45	59	10	36	2	3	BOTH	PRACTICE	f
+908	4	23	45	59	10	36	4	2	BOTH	PRACTICE	f
+909	4	23	46	59	10	36	1	3	BOTH	PRACTICE	f
+910	4	23	46	59	10	36	5	3	BOTH	PRACTICE	f
+911	4	23	46	59	10	32	3	1	BOTH	PRACTICE	f
+912	4	23	46	59	10	36	1	4	BOTH	PRACTICE	f
+916	4	26	\N	96	6	25	1	4	BOTH	PRACTICE	f
+917	4	26	\N	96	6	25	2	4	BOTH	PRACTICE	f
+918	4	26	\N	96	46	26	3	3	BOTH	PRACTICE	f
+919	4	26	\N	96	46	26	4	3	BOTH	PRACTICE	f
+928	4	31	61	37	28	40	1	6	BOTH	LAB	f
+929	4	31	61	37	28	40	5	6	BOTH	LAB	f
+930	4	31	61	37	28	40	4	7	BOTH	LAB	f
+931	4	31	62	37	28	40	2	7	BOTH	LAB	f
+932	4	31	62	37	28	40	5	5	BOTH	LAB	f
+933	4	31	62	37	28	40	1	7	BOTH	LAB	f
+944	4	36	71	46	28	40	1	4	BOTH	LAB	f
+945	4	36	71	46	28	40	2	4	BOTH	LAB	f
+946	4	36	71	46	28	40	4	4	BOTH	LAB	f
+947	4	36	72	46	28	40	3	5	BOTH	LAB	f
+948	4	36	71	46	30	38	5	6	BOTH	LAB	f
+949	4	36	71	46	30	38	5	7	BOTH	LAB	f
+950	4	36	71	46	30	38	4	5	BOTH	LAB	f
+951	4	36	72	46	30	38	2	7	BOTH	LAB	f
+952	4	36	72	46	30	38	3	6	BOTH	LAB	f
+953	4	36	72	46	30	38	1	6	BOTH	LAB	f
+954	4	40	79	69	81	32	1	6	BOTH	PRACTICE	f
+955	4	40	79	69	81	32	5	6	BOTH	PRACTICE	f
+956	4	40	79	69	81	32	3	6	BOTH	PRACTICE	f
+957	4	40	79	69	81	32	2	5	BOTH	PRACTICE	f
+958	4	40	79	69	81	32	5	7	BOTH	PRACTICE	f
+959	4	40	80	69	81	32	4	7	BOTH	PRACTICE	f
+960	4	40	80	69	81	32	1	7	BOTH	PRACTICE	f
+961	4	40	80	69	81	32	2	6	BOTH	PRACTICE	f
+962	4	40	80	69	81	32	3	5	BOTH	PRACTICE	f
+963	4	40	80	69	81	32	4	6	BOTH	PRACTICE	f
+964	4	40	79	69	29	32	3	7	BOTH	PRACTICE	f
+965	4	40	79	69	29	34	1	7	BOTH	PRACTICE	f
+966	4	40	79	69	29	34	2	6	BOTH	PRACTICE	f
+967	4	40	79	69	29	32	4	5	BOTH	PRACTICE	f
+968	4	40	79	69	29	34	4	6	BOTH	PRACTICE	f
+969	4	40	80	69	29	34	5	6	BOTH	PRACTICE	f
+970	4	40	80	69	29	34	5	7	BOTH	PRACTICE	f
+971	4	40	80	69	29	34	3	6	BOTH	PRACTICE	f
+972	4	40	80	69	29	32	2	7	BOTH	PRACTICE	f
+973	4	40	80	69	29	34	1	6	BOTH	PRACTICE	f
+974	4	41	\N	71	34	7	4	7	BOTH	PRACTICE	f
+975	4	41	\N	71	34	7	1	7	BOTH	PRACTICE	f
+976	4	37	73	74	83	36	5	7	BOTH	PRACTICE	f
+977	4	37	73	74	83	7	1	6	BOTH	PRACTICE	f
+978	4	37	74	74	83	34	3	5	BOTH	PRACTICE	f
+979	4	37	74	74	83	34	4	5	BOTH	PRACTICE	f
+980	4	37	73	74	63	36	2	6	BOTH	PRACTICE	f
+981	4	37	74	74	63	36	3	6	BOTH	PRACTICE	f
+982	4	42	\N	87	19	15	5	5	BOTH	PRACTICE	f
+983	4	42	\N	87	19	15	3	7	BOTH	PRACTICE	f
+984	4	42	\N	87	19	15	4	6	BOTH	PRACTICE	f
+985	4	42	\N	87	19	15	2	6	BOTH	PRACTICE	f
+986	4	43	\N	110	72	9	5	5	BOTH	PRACTICE	f
+989	4	45	\N	116	82	8	3	7	BOTH	PRACTICE	f
+990	4	45	\N	116	82	8	1	6	BOTH	PRACTICE	f
+993	4	47	\N	49	60	15	4	7	BOTH	PRACTICE	f
+994	4	47	\N	49	60	7	1	5	BOTH	PRACTICE	f
+995	4	47	\N	49	60	7	3	6	BOTH	PRACTICE	f
+996	4	47	\N	50	30	38	5	5	BOTH	LAB	f
+997	4	47	\N	50	30	38	2	6	BOTH	LAB	f
+998	4	51	\N	92	1	15	1	7	BOTH	PRACTICE	f
+999	4	51	\N	92	1	7	5	5	BOTH	PRACTICE	f
+1000	4	51	\N	92	1	7	2	5	BOTH	PRACTICE	f
+1001	4	51	\N	92	1	7	4	6	BOTH	PRACTICE	f
+1002	4	49	\N	95	34	15	1	6	BOTH	PRACTICE	f
+1003	4	49	\N	95	34	35	4	6	BOTH	PRACTICE	f
+1004	4	50	\N	89	19	34	2	5	BOTH	PRACTICE	f
+1005	4	50	\N	89	19	15	3	6	BOTH	PRACTICE	f
+1006	4	50	\N	89	19	34	4	7	BOTH	PRACTICE	f
+1007	4	3	\N	1	20	30	2	4	BOTH	LECTURE	f
+1008	4	3	5	3	78	16	3	3	BOTH	PRACTICE	f
+1009	4	3	6	3	78	16	5	4	BOTH	PRACTICE	f
+1010	4	3	5	4	62	15	1	4	BOTH	PRACTICE	f
+1011	4	3	6	4	62	15	4	3	BOTH	PRACTICE	f
+1012	4	3	\N	5	71	14	1	2	BOTH	LECTURE	f
+1013	4	3	\N	7	26	7	5	3	BOTH	LECTURE	f
+1014	4	3	5	8	94	21	3	4	BOTH	LAB	f
+1015	4	3	6	8	94	21	4	2	BOTH	LAB	f
+1016	4	3	\N	9	56	10	2	1	BOTH	LECTURE	f
+1017	4	3	\N	10	69	2	2	2	BOTH	LECTURE	f
+1018	4	3	5	14	79	7	4	2	BOTH	PRACTICE	f
+1019	4	3	6	14	79	7	3	3	BOTH	PRACTICE	f
+1020	4	3	5	14	74	7	1	3	BOTH	PRACTICE	f
+1021	4	3	6	14	74	36	5	2	BOTH	PRACTICE	f
+1022	4	6	\N	63	80	27	2	2	BOTH	LECTURE	f
+1023	4	10	\N	7	13	12	4	2	BOTH	LECTURE	f
+1024	4	10	\N	7	13	12	5	3	BOTH	LECTURE	f
+1025	4	10	\N	19	70	24	2	3	BOTH	LECTURE	f
+1026	4	11	\N	7	13	12	4	3	BOTH	LECTURE	f
+1027	4	11	\N	7	13	12	5	2	BOTH	LECTURE	f
+1028	4	11	\N	19	70	24	2	2	BOTH	LECTURE	f
+1029	4	7	\N	1	20	30	2	2	BOTH	LECTURE	f
+1030	4	7	13	3	78	16	3	2	BOTH	PRACTICE	f
+1031	4	7	14	3	78	16	5	2	BOTH	PRACTICE	f
+1032	4	7	13	4	62	15	4	4	BOTH	PRACTICE	f
+1033	4	7	14	4	62	15	1	2	BOTH	PRACTICE	f
+1034	4	7	\N	5	71	14	1	1	BOTH	LECTURE	f
+1035	4	7	\N	7	26	7	2	3	BOTH	LECTURE	f
+1036	4	7	13	8	94	21	3	3	BOTH	LAB	f
+1037	4	7	14	8	94	21	5	3	BOTH	LAB	f
+1038	4	7	\N	9	56	10	4	3	BOTH	LECTURE	f
+1039	4	7	\N	10	69	2	2	4	BOTH	LECTURE	f
+1040	4	7	13	14	79	36	3	4	BOTH	PRACTICE	f
+1041	4	7	14	14	79	36	4	1	BOTH	PRACTICE	f
+1042	4	7	13	14	74	15	5	3	BOTH	PRACTICE	f
+1043	4	7	14	14	74	34	5	4	BOTH	PRACTICE	f
+1044	4	8	\N	1	20	30	2	1	BOTH	LECTURE	f
+1045	4	8	15	3	78	16	3	1	BOTH	PRACTICE	f
+1046	4	8	16	3	78	16	5	1	BOTH	PRACTICE	f
+1047	4	8	15	4	62	15	1	1	BOTH	PRACTICE	f
+1048	4	8	16	4	62	15	4	1	BOTH	PRACTICE	f
+1049	4	8	\N	5	71	14	5	2	BOTH	LECTURE	f
+1050	4	8	\N	7	26	7	2	2	BOTH	LECTURE	f
+1051	4	8	15	8	94	21	4	1	BOTH	LAB	f
+1052	4	8	16	8	94	21	1	3	BOTH	LAB	f
+1053	4	8	\N	9	56	10	3	2	BOTH	LECTURE	f
+1054	4	8	\N	10	69	2	2	3	BOTH	LECTURE	f
+1055	4	8	15	14	79	36	1	2	BOTH	PRACTICE	f
+1056	4	8	16	14	79	36	3	1	BOTH	PRACTICE	f
+1057	4	8	15	14	74	36	5	1	BOTH	PRACTICE	f
+1058	4	8	16	14	74	35	4	2	BOTH	PRACTICE	f
+1059	4	12	\N	1	20	30	4	2	BOTH	LECTURE	f
+1060	4	12	23	3	78	16	2	1	BOTH	PRACTICE	f
+1061	4	12	24	3	78	16	1	3	BOTH	PRACTICE	f
+1062	4	12	23	4	62	15	3	3	BOTH	PRACTICE	f
+1063	4	12	24	4	62	15	5	4	BOTH	PRACTICE	f
+1064	4	12	\N	5	71	14	5	1	BOTH	LECTURE	f
+1065	4	12	\N	7	26	35	4	3	BOTH	LECTURE	f
+1066	4	12	23	8	94	21	2	2	BOTH	LAB	f
+1067	4	12	24	8	94	21	3	1	BOTH	LAB	f
+1068	4	12	\N	9	56	10	4	4	BOTH	LECTURE	f
+1069	4	12	\N	10	69	2	1	4	BOTH	LECTURE	f
+1070	4	12	23	14	79	15	2	3	BOTH	PRACTICE	f
+1071	4	12	24	14	79	35	1	1	BOTH	PRACTICE	f
+1072	4	12	23	14	74	7	3	4	BOTH	PRACTICE	f
+1073	4	12	24	14	74	7	1	2	BOTH	PRACTICE	f
+1074	4	13	\N	1	20	30	4	1	BOTH	LECTURE	f
+1075	4	13	25	3	78	16	1	2	BOTH	PRACTICE	f
+1076	4	13	26	3	78	16	2	2	BOTH	PRACTICE	f
+1077	4	13	25	4	62	15	3	4	BOTH	PRACTICE	f
+1078	4	13	26	4	62	35	5	3	BOTH	PRACTICE	f
+1079	4	13	\N	5	71	14	4	2	BOTH	LECTURE	f
+1080	4	13	\N	7	26	7	2	4	BOTH	LECTURE	f
+1081	4	13	25	8	94	21	5	2	BOTH	LAB	f
+1082	4	13	26	8	94	21	1	2	BOTH	LAB	f
+1083	4	13	\N	9	56	10	3	3	BOTH	LECTURE	f
+1084	4	13	\N	10	69	2	1	3	BOTH	LECTURE	f
+1085	4	13	25	14	79	2	5	3	BOTH	PRACTICE	f
+1086	4	13	26	14	79	34	2	1	BOTH	PRACTICE	f
+1087	4	13	25	14	74	36	4	3	BOTH	PRACTICE	f
+1088	4	13	26	14	74	36	3	2	BOTH	PRACTICE	f
+1089	4	14	\N	1	20	30	4	3	BOTH	LECTURE	f
+1090	4	14	27	3	78	16	2	3	BOTH	PRACTICE	f
+1091	4	14	28	3	78	16	1	4	BOTH	PRACTICE	f
+1092	4	14	27	4	62	15	3	2	BOTH	PRACTICE	f
+1093	4	14	28	4	62	3	5	2	BOTH	PRACTICE	f
+1094	4	14	\N	5	71	14	4	1	BOTH	LECTURE	f
+1095	4	14	\N	7	26	7	2	1	BOTH	LECTURE	f
+1096	4	14	27	8	94	21	5	1	BOTH	LAB	f
+1097	4	14	28	8	94	21	1	1	BOTH	LAB	f
+1098	4	14	\N	9	56	10	3	4	BOTH	LECTURE	f
+1099	4	14	\N	10	69	2	4	2	BOTH	LECTURE	f
+1100	4	14	27	14	79	15	2	2	BOTH	PRACTICE	f
+1101	4	14	28	14	79	35	1	3	BOTH	PRACTICE	f
+1102	4	14	27	14	74	35	3	3	BOTH	PRACTICE	f
+1103	4	14	28	14	74	35	2	3	BOTH	PRACTICE	f
+1104	4	17	\N	15	71	14	2	1	BOTH	LECTURE	f
+1105	4	17	\N	15	71	14	4	3	BOTH	LECTURE	f
+1106	4	17	\N	12	42	3	5	3	BOTH	PRACTICE	f
+1107	4	17	\N	14	68	35	2	2	BOTH	PRACTICE	f
+1108	4	17	\N	17	94	21	5	4	BOTH	LAB	f
+1109	4	17	\N	17	94	21	2	3	BOTH	LAB	f
+1110	4	17	\N	27	33	19	1	2	BOTH	PRACTICE	f
+1111	4	17	\N	27	33	19	3	2	BOTH	PRACTICE	f
+1112	4	17	\N	27	33	19	1	1	BOTH	PRACTICE	f
+1113	4	17	\N	27	33	19	3	1	BOTH	PRACTICE	f
+1114	4	17	\N	27	33	19	4	4	BOTH	PRACTICE	f
+1115	4	17	\N	27	33	19	1	4	BOTH	PRACTICE	f
+1119	4	27	\N	96	6	25	2	3	BOTH	PRACTICE	f
+1120	4	27	\N	96	6	25	1	3	BOTH	PRACTICE	f
+1121	4	27	\N	96	46	26	5	4	BOTH	PRACTICE	f
+1122	4	27	\N	96	46	26	4	4	BOTH	PRACTICE	f
+1126	4	28	\N	96	6	25	2	2	BOTH	PRACTICE	f
+1127	4	28	\N	96	6	25	4	1	BOTH	PRACTICE	f
+1128	4	28	\N	96	46	26	1	4	BOTH	PRACTICE	f
+1129	4	28	\N	96	46	26	2	3	BOTH	PRACTICE	f
+1130	4	20	\N	15	71	14	5	3	BOTH	LECTURE	f
+1131	4	20	\N	15	71	14	4	4	BOTH	LECTURE	f
+1132	4	20	\N	12	42	7	3	2	BOTH	PRACTICE	f
+1133	4	20	\N	14	68	15	2	1	BOTH	PRACTICE	f
+1134	4	20	\N	27	33	19	5	2	BOTH	PRACTICE	f
+1135	4	20	\N	27	33	19	4	3	BOTH	PRACTICE	f
+1136	4	20	\N	27	33	19	2	3	BOTH	PRACTICE	f
+1137	4	20	\N	27	33	19	2	2	BOTH	PRACTICE	f
+1138	4	20	\N	27	33	19	5	1	BOTH	PRACTICE	f
+1139	4	20	\N	27	33	19	4	2	BOTH	PRACTICE	f
+1140	4	21	\N	15	71	14	5	4	BOTH	LECTURE	f
+1141	4	21	\N	15	71	14	3	1	BOTH	LECTURE	f
+1142	4	21	\N	12	42	3	4	2	BOTH	PRACTICE	f
+1143	4	21	\N	14	68	2	1	1	BOTH	PRACTICE	f
+1144	4	22	\N	15	71	14	3	2	BOTH	LECTURE	f
+1145	4	22	\N	12	42	15	5	1	BOTH	PRACTICE	f
+1146	4	22	\N	14	68	35	1	2	BOTH	PRACTICE	f
+1147	4	24	\N	12	42	7	4	1	BOTH	PRACTICE	f
+1148	4	24	\N	14	68	8	5	3	BOTH	PRACTICE	f
+1149	4	25	\N	12	42	2	3	3	BOTH	PRACTICE	f
+1150	4	25	\N	14	68	3	1	3	BOTH	PRACTICE	f
+1152	4	29	\N	96	6	25	2	1	BOTH	PRACTICE	f
+1153	4	29	\N	96	6	25	4	2	BOTH	PRACTICE	f
+1154	4	30	\N	96	6	25	4	3	BOTH	PRACTICE	f
+1155	4	30	\N	96	6	25	1	2	BOTH	PRACTICE	f
+1156	4	38	75	74	83	36	4	6	BOTH	PRACTICE	f
+1157	4	38	75	74	83	32	1	5	BOTH	PRACTICE	f
+1158	4	38	76	74	83	7	5	6	BOTH	PRACTICE	f
+1159	4	38	76	74	83	35	3	6	BOTH	PRACTICE	f
+1160	4	38	75	74	63	34	2	7	BOTH	PRACTICE	f
+1161	4	38	76	74	63	34	3	7	BOTH	PRACTICE	f
+1162	4	39	77	74	83	32	5	5	BOTH	PRACTICE	f
+1163	4	39	77	74	83	36	3	7	BOTH	PRACTICE	f
+1164	4	39	78	74	83	36	1	7	BOTH	PRACTICE	f
+1165	4	39	78	74	83	35	4	7	BOTH	PRACTICE	f
+1166	4	39	77	74	63	15	2	5	BOTH	PRACTICE	f
+1167	4	39	78	74	63	7	3	5	BOTH	PRACTICE	f
+1168	4	44	\N	110	72	9	5	6	BOTH	PRACTICE	f
+1169	4	46	\N	116	82	8	1	5	BOTH	PRACTICE	f
+1170	4	46	\N	116	82	8	3	6	BOTH	PRACTICE	f
+1173	4	48	\N	49	60	7	3	7	BOTH	PRACTICE	f
+1174	4	48	\N	49	60	2	4	6	BOTH	PRACTICE	f
+1175	4	48	\N	49	60	35	1	6	BOTH	PRACTICE	f
+1176	4	48	\N	50	30	38	2	5	BOTH	LAB	f
+1177	4	48	\N	50	30	38	1	7	BOTH	LAB	f
+1178	5	1	\N	1	20	30	5	2	BOTH	LECTURE	f
+1179	5	1	1	3	78	16	2	4	BOTH	PRACTICE	f
+1180	5	1	2	3	78	16	1	4	BOTH	PRACTICE	f
+1181	5	1	1	4	62	15	3	4	BOTH	PRACTICE	f
+1182	5	1	2	4	62	15	4	2	BOTH	PRACTICE	f
+1183	5	1	\N	5	71	14	5	3	BOTH	LECTURE	f
+1184	5	1	\N	7	26	7	1	1	BOTH	LECTURE	f
+1185	5	1	\N	7	26	7	4	1	BOTH	LECTURE	f
+1186	5	1	1	8	94	21	2	3	BOTH	LAB	f
+1187	5	1	2	8	94	21	3	3	BOTH	LAB	f
+1188	5	1	\N	9	56	10	1	2	BOTH	LECTURE	f
+1189	5	1	\N	10	69	2	5	4	BOTH	LECTURE	f
+1190	5	1	1	14	79	32	3	2	BOTH	PRACTICE	f
+1191	5	1	2	14	79	32	4	3	BOTH	PRACTICE	f
+1192	5	1	1	26	73	32	2	1	BOTH	LAB	f
+1193	5	1	2	26	73	32	4	4	BOTH	LAB	f
+1194	5	1	1	26	94	21	2	2	BOTH	LAB	f
+1195	5	1	2	26	94	21	3	4	BOTH	LAB	f
+1196	5	2	3	3	14	34	4	3	BOTH	PRACTICE	f
+1197	5	2	4	3	14	32	5	1	BOTH	PRACTICE	f
+1198	5	2	\N	7	26	7	1	2	BOTH	LECTURE	f
+1199	5	2	\N	7	26	7	2	1	BOTH	LECTURE	f
+1200	5	2	3	14	16	32	3	1	BOTH	PRACTICE	f
+1201	5	2	4	14	16	32	5	2	BOTH	PRACTICE	f
+1202	5	2	3	26	73	32	2	2	BOTH	LAB	f
+1203	5	2	4	26	73	40	4	3	BOTH	LAB	f
+1204	5	2	3	26	66	3	3	2	BOTH	LAB	f
+1205	5	2	4	26	66	3	1	1	BOTH	LAB	f
+1206	5	4	7	1	38	18	5	4	BOTH	PRACTICE	f
+1207	5	4	8	1	38	18	4	2	BOTH	PRACTICE	f
+1208	5	4	\N	7	11	7	3	2	BOTH	LECTURE	f
+1211	5	9	\N	7	13	12	3	2	BOTH	LECTURE	f
+1212	5	15	\N	28	33	19	3	3	BOTH	PRACTICE	f
+1213	5	15	\N	28	33	19	4	4	BOTH	PRACTICE	f
+1214	5	15	\N	28	33	19	5	4	BOTH	PRACTICE	f
+1215	5	15	\N	28	27	15	1	1	BOTH	PRACTICE	f
+1216	5	15	\N	28	27	7	2	4	BOTH	PRACTICE	f
+1217	5	15	\N	28	27	15	1	2	BOTH	PRACTICE	f
+1218	5	16	\N	28	27	34	2	3	BOTH	PRACTICE	f
+1219	5	16	\N	28	27	34	1	3	BOTH	PRACTICE	f
+1220	5	16	\N	28	27	34	5	2	BOTH	PRACTICE	f
+1221	5	16	\N	28	59	22	4	2	BOTH	PRACTICE	f
+1222	5	16	\N	28	59	22	3	1	BOTH	PRACTICE	f
+1223	5	16	\N	28	59	22	4	3	BOTH	PRACTICE	f
+1224	5	19	37	31	17	39	2	3	BOTH	LAB	f
+1225	5	19	37	31	17	39	1	2	BOTH	LAB	f
+1226	5	19	37	31	17	39	5	3	BOTH	LAB	f
+1227	5	19	37	31	17	39	4	3	BOTH	LAB	f
+1228	5	19	38	31	17	39	3	2	BOTH	LAB	f
+1229	5	19	38	31	17	39	3	3	BOTH	LAB	f
+1230	5	19	38	31	17	39	2	4	BOTH	LAB	f
+1231	5	19	38	31	17	39	5	2	BOTH	LAB	f
+1232	5	19	37	31	30	38	4	4	BOTH	LAB	f
+1233	5	19	37	31	30	38	1	3	BOTH	LAB	f
+1234	5	19	37	31	30	38	1	4	BOTH	LAB	f
+1235	5	19	37	31	30	38	5	4	BOTH	LAB	f
+1236	5	19	38	31	30	38	3	4	BOTH	LAB	f
+1237	5	19	38	31	30	38	4	3	BOTH	LAB	f
+1238	5	19	38	31	30	38	5	3	BOTH	LAB	f
+1239	5	19	38	31	30	38	2	3	BOTH	LAB	f
+1240	5	26	51	100	72	9	2	3	BOTH	LAB	f
+1241	5	26	51	100	72	9	4	3	BOTH	LAB	f
+1242	5	26	52	100	72	9	1	3	BOTH	LAB	f
+1243	5	26	52	100	72	9	5	3	BOTH	LAB	f
+1244	5	26	51	100	41	40	3	2	BOTH	LAB	f
+1245	5	26	52	100	41	40	3	3	BOTH	LAB	f
+1246	5	51	\N	93	77	28	4	6	BOTH	LECTURE	f
+1247	5	51	\N	93	12	7	1	5	BOTH	LECTURE	f
+1248	5	3	\N	1	20	30	5	3	BOTH	LECTURE	f
+1249	5	3	5	3	78	16	2	3	BOTH	PRACTICE	f
+1250	5	3	6	3	78	16	1	3	BOTH	PRACTICE	f
+1251	5	3	5	4	62	15	4	1	BOTH	PRACTICE	f
+1252	5	3	6	4	62	15	3	3	BOTH	PRACTICE	f
+1253	5	3	\N	5	71	14	5	4	BOTH	LECTURE	f
+1254	5	3	\N	7	26	7	4	2	BOTH	LECTURE	f
+1255	5	3	\N	7	26	7	1	4	BOTH	LECTURE	f
+1256	5	3	5	8	94	21	2	4	BOTH	LAB	f
+1257	5	3	6	8	94	21	3	2	BOTH	LAB	f
+1258	5	3	\N	9	56	10	4	3	BOTH	LECTURE	f
+1259	5	3	\N	10	69	2	5	2	BOTH	LECTURE	f
+1260	5	3	5	14	79	34	3	1	BOTH	PRACTICE	f
+1261	5	3	6	14	79	34	2	2	BOTH	PRACTICE	f
+1262	5	3	5	26	73	32	1	3	BOTH	LAB	f
+1263	5	3	6	26	73	32	2	3	BOTH	LAB	f
+1264	5	3	5	26	94	21	4	4	BOTH	LAB	f
+1265	5	3	6	26	94	21	3	1	BOTH	LAB	f
+1266	5	10	\N	7	13	12	3	1	BOTH	LECTURE	f
+1267	5	11	\N	7	13	12	3	3	BOTH	LECTURE	f
+1268	5	7	\N	1	20	30	5	1	BOTH	LECTURE	f
+1269	5	7	13	3	78	16	2	2	BOTH	PRACTICE	f
+1270	5	7	14	3	78	16	1	2	BOTH	PRACTICE	f
+1271	5	7	13	4	62	15	4	3	BOTH	PRACTICE	f
+1272	5	7	14	4	62	15	3	2	BOTH	PRACTICE	f
+1273	5	7	\N	5	71	14	5	2	BOTH	LECTURE	f
+1274	5	7	\N	7	26	7	2	3	BOTH	LECTURE	f
+1275	5	7	\N	7	26	15	2	4	BOTH	LECTURE	f
+1276	5	7	13	8	94	21	4	2	BOTH	LAB	f
+1277	5	7	14	8	94	21	1	3	BOTH	LAB	f
+1278	5	7	\N	9	56	10	3	1	BOTH	LECTURE	f
+1279	5	7	\N	10	69	2	5	3	BOTH	LECTURE	f
+1280	5	7	13	14	79	34	4	4	BOTH	PRACTICE	f
+1281	5	7	14	14	79	32	3	3	BOTH	PRACTICE	f
+1282	5	7	13	26	73	32	1	4	BOTH	LAB	f
+1283	5	7	14	26	73	32	4	2	BOTH	LAB	f
+1284	5	7	13	26	94	21	1	2	BOTH	LAB	f
+1285	5	7	14	26	94	21	2	1	BOTH	LAB	f
+1286	5	8	\N	1	20	30	5	4	BOTH	LECTURE	f
+1287	5	8	15	3	78	16	2	1	BOTH	PRACTICE	f
+1288	5	8	16	3	78	16	1	1	BOTH	PRACTICE	f
+1289	5	8	15	4	62	15	4	4	BOTH	PRACTICE	f
+1290	5	8	16	4	62	15	3	1	BOTH	PRACTICE	f
+1291	5	8	\N	5	71	14	5	1	BOTH	LECTURE	f
+1292	5	8	\N	7	26	7	4	3	BOTH	LECTURE	f
+1293	5	8	\N	7	26	35	3	2	BOTH	LECTURE	f
+1294	5	8	15	8	94	21	1	1	BOTH	LAB	f
+1295	5	8	16	8	94	21	1	4	BOTH	LAB	f
+1296	5	8	\N	9	56	10	2	3	BOTH	LECTURE	f
+1297	5	8	\N	10	69	2	2	4	BOTH	LECTURE	f
+1298	5	8	15	14	79	34	4	2	BOTH	PRACTICE	f
+1299	5	8	16	14	79	32	3	4	BOTH	PRACTICE	f
+1300	5	8	15	26	73	32	5	3	BOTH	LAB	f
+1301	5	8	16	26	73	32	1	2	BOTH	LAB	f
+1302	5	8	15	26	94	21	4	1	BOTH	LAB	f
+1303	5	8	16	26	94	21	5	2	BOTH	LAB	f
+1304	5	12	\N	1	20	30	2	3	BOTH	LECTURE	f
+1305	5	12	23	3	78	16	5	3	BOTH	PRACTICE	f
+1306	5	12	24	3	78	16	3	4	BOTH	PRACTICE	f
+1307	5	12	23	4	62	15	1	3	BOTH	PRACTICE	f
+1308	5	12	24	4	62	15	1	4	BOTH	PRACTICE	f
+1309	5	12	\N	5	71	14	4	2	BOTH	LECTURE	f
+1310	5	12	\N	7	26	7	3	3	BOTH	LECTURE	f
+1311	5	12	\N	7	26	7	4	4	BOTH	LECTURE	f
+1312	5	12	23	8	94	21	5	4	BOTH	LAB	f
+1313	5	12	24	8	94	21	5	3	BOTH	LAB	f
+1314	5	12	\N	9	56	10	2	4	BOTH	LECTURE	f
+1315	5	12	\N	10	69	2	4	3	BOTH	LECTURE	f
+1316	5	12	23	14	79	34	2	1	BOTH	PRACTICE	f
+1317	5	12	24	14	79	36	1	3	BOTH	PRACTICE	f
+1318	5	12	23	26	73	40	3	1	BOTH	LAB	f
+1319	5	12	24	26	73	32	5	4	BOTH	LAB	f
+1320	5	13	\N	1	20	30	2	2	BOTH	LECTURE	f
+1321	5	13	25	3	78	16	5	2	BOTH	PRACTICE	f
+1322	5	13	26	3	78	16	3	3	BOTH	PRACTICE	f
+1323	5	13	25	4	62	34	1	2	BOTH	PRACTICE	f
+1324	5	13	26	4	62	32	1	1	BOTH	PRACTICE	f
+1325	5	13	\N	5	71	14	4	1	BOTH	LECTURE	f
+1326	5	13	\N	7	26	7	3	4	BOTH	LECTURE	f
+1327	5	13	\N	7	26	7	5	4	BOTH	LECTURE	f
+1328	5	13	\N	9	56	10	4	2	BOTH	LECTURE	f
+1329	5	13	\N	10	69	2	2	3	BOTH	LECTURE	f
+1330	5	13	25	14	79	34	5	3	BOTH	PRACTICE	f
+1331	5	13	26	14	79	36	1	2	BOTH	PRACTICE	f
+1332	5	13	25	26	73	32	2	4	BOTH	LAB	f
+1333	5	13	26	26	73	41	3	2	BOTH	LAB	f
+1334	5	14	\N	1	20	30	2	1	BOTH	LECTURE	f
+1335	5	14	27	3	78	16	5	1	BOTH	PRACTICE	f
+1336	5	14	28	3	78	16	3	2	BOTH	PRACTICE	f
+1337	5	14	27	4	62	15	5	2	BOTH	PRACTICE	f
+1338	5	14	28	4	62	15	2	2	BOTH	PRACTICE	f
+1339	5	14	\N	5	71	14	4	3	BOTH	LECTURE	f
+1340	5	14	\N	7	26	7	3	1	BOTH	LECTURE	f
+1341	5	14	\N	7	26	7	5	3	BOTH	LECTURE	f
+1342	5	14	\N	9	56	10	1	3	BOTH	LECTURE	f
+1343	5	14	\N	10	69	2	4	4	BOTH	LECTURE	f
+1344	5	14	27	14	79	34	1	4	BOTH	PRACTICE	f
+1345	5	14	28	14	79	36	2	3	BOTH	PRACTICE	f
+1346	5	14	27	26	73	32	4	1	BOTH	LAB	f
+1347	5	14	28	26	73	41	3	3	BOTH	LAB	f
+1348	5	17	\N	28	33	19	4	3	BOTH	PRACTICE	f
+1349	5	17	\N	28	33	19	3	2	BOTH	PRACTICE	f
+1350	5	17	\N	28	33	19	5	3	BOTH	PRACTICE	f
+1351	5	17	\N	28	27	35	2	2	BOTH	PRACTICE	f
+1352	5	17	\N	28	27	35	1	4	BOTH	PRACTICE	f
+1353	5	17	\N	28	27	7	5	1	BOTH	PRACTICE	f
+1354	5	27	53	100	72	9	4	4	BOTH	LAB	f
+1355	5	27	53	100	72	9	2	2	BOTH	LAB	f
+1356	5	27	54	100	72	9	5	4	BOTH	LAB	f
+1357	5	27	54	100	72	9	1	4	BOTH	LAB	f
+1358	5	27	53	100	41	40	3	4	BOTH	LAB	f
+1359	5	27	54	100	41	41	3	1	BOTH	LAB	f
+1360	5	28	55	100	72	9	5	2	BOTH	LAB	f
+1361	5	28	55	100	72	9	2	4	BOTH	LAB	f
+1362	5	28	56	100	72	9	1	2	BOTH	LAB	f
+1363	5	28	56	100	72	9	4	2	BOTH	LAB	f
+1364	5	28	55	100	41	40	5	3	BOTH	LAB	f
+1365	5	28	56	100	41	41	4	3	BOTH	LAB	f
+1366	5	20	\N	28	33	19	5	2	BOTH	PRACTICE	f
+1367	5	20	\N	28	33	19	3	1	BOTH	PRACTICE	f
+1368	5	20	\N	28	33	19	4	2	BOTH	PRACTICE	f
+1369	5	20	\N	28	27	15	2	1	BOTH	PRACTICE	f
+1370	5	20	\N	28	27	15	5	3	BOTH	PRACTICE	f
+1371	5	20	\N	28	27	35	4	3	BOTH	PRACTICE	f
+1372	5	21	\N	28	33	19	4	1	BOTH	PRACTICE	f
+1373	5	21	\N	28	33	19	5	1	BOTH	PRACTICE	f
+1374	5	21	\N	28	33	19	3	4	BOTH	PRACTICE	f
+1375	5	21	\N	28	27	36	4	2	BOTH	PRACTICE	f
+1376	5	21	\N	28	27	34	5	4	BOTH	PRACTICE	f
+1377	5	21	\N	28	27	36	3	1	BOTH	PRACTICE	f
+1378	5	22	\N	28	33	19	1	2	BOTH	PRACTICE	f
+1379	5	22	\N	28	33	19	2	4	BOTH	PRACTICE	f
+1380	5	22	\N	28	33	19	1	3	BOTH	PRACTICE	f
+1381	5	22	\N	28	27	35	4	1	BOTH	PRACTICE	f
+1382	5	22	\N	28	27	2	3	2	BOTH	PRACTICE	f
+1383	5	22	\N	28	27	35	3	3	BOTH	PRACTICE	f
+1384	5	24	\N	28	33	19	2	3	BOTH	PRACTICE	f
+1385	5	24	\N	28	33	19	1	4	BOTH	PRACTICE	f
+1386	5	24	\N	28	33	19	2	2	BOTH	PRACTICE	f
+1387	5	29	57	100	72	9	2	1	BOTH	LAB	f
+1388	5	29	57	100	72	9	1	1	BOTH	LAB	f
+1389	5	29	58	100	72	9	5	1	BOTH	LAB	f
+1390	5	29	58	100	72	9	4	1	BOTH	LAB	f
+1391	5	29	57	100	41	40	5	4	BOTH	LAB	f
+1392	5	29	58	100	41	40	4	2	BOTH	LAB	f
+1393	5	30	59	100	72	9	3	2	BOTH	LAB	f
+1394	5	30	59	100	72	9	3	3	BOTH	LAB	f
+1395	5	30	59	100	41	40	5	2	BOTH	LAB	f
+1396	5	30	60	100	41	40	4	4	BOTH	LAB	f
+1397	6	1	\N	1	20	30	2	3	BOTH	LECTURE	f
+1398	6	1	1	3	78	16	4	4	BOTH	PRACTICE	f
+1399	6	1	2	3	78	16	5	2	BOTH	PRACTICE	f
+1400	6	1	1	4	62	15	3	4	BOTH	PRACTICE	f
+1401	6	1	2	4	62	15	1	3	BOTH	PRACTICE	f
+1402	6	1	\N	5	71	14	2	4	BOTH	LECTURE	f
+1403	6	1	\N	7	26	7	3	1	BOTH	LECTURE	f
+1404	6	1	1	8	94	21	1	2	BOTH	LAB	f
+1405	6	1	2	8	94	21	5	3	BOTH	LAB	f
+1406	6	1	\N	9	56	10	4	3	BOTH	LECTURE	f
+1407	6	1	\N	10	69	2	3	2	BOTH	LECTURE	f
+1408	6	1	1	14	79	32	1	3	BOTH	PRACTICE	f
+1409	6	1	2	14	79	32	5	4	BOTH	PRACTICE	f
+1410	6	1	1	14	74	32	4	1	BOTH	PRACTICE	f
+1411	6	1	2	14	74	32	2	2	BOTH	PRACTICE	f
+1412	6	2	3	3	14	32	1	2	BOTH	PRACTICE	f
+1413	6	2	4	3	14	32	2	4	BOTH	PRACTICE	f
+1414	6	2	\N	7	26	7	3	2	BOTH	LECTURE	f
+1415	6	2	3	14	16	32	5	3	BOTH	PRACTICE	f
+1416	6	2	4	14	16	32	4	4	BOTH	PRACTICE	f
+1417	6	2	3	14	64	34	1	3	BOTH	PRACTICE	f
+1418	6	2	4	14	64	34	5	3	BOTH	PRACTICE	f
+1419	6	4	7	1	38	18	4	3	BOTH	PRACTICE	f
+1420	6	4	8	1	38	18	5	1	BOTH	PRACTICE	f
+1421	6	4	\N	7	11	7	2	1	BOTH	LECTURE	f
+1422	6	4	\N	7	11	15	3	1	BOTH	LECTURE	f
+1423	6	5	\N	63	80	27	2	3	BOTH	LECTURE	f
+1424	6	9	\N	7	13	12	4	4	BOTH	LECTURE	f
+1425	6	9	\N	7	13	12	2	2	BOTH	LECTURE	f
+1426	6	9	\N	19	70	24	3	4	BOTH	LECTURE	f
+1427	6	15	\N	15	71	14	2	3	BOTH	LECTURE	f
+1428	6	15	\N	15	71	14	1	4	BOTH	LECTURE	f
+1429	6	15	\N	12	42	7	5	4	BOTH	PRACTICE	f
+1430	6	15	\N	14	68	7	4	3	BOTH	PRACTICE	f
+1431	6	15	\N	17	94	21	3	4	BOTH	LAB	f
+1432	6	15	\N	17	94	21	2	4	BOTH	LAB	f
+1433	6	15	\N	27	33	19	4	4	BOTH	PRACTICE	f
+1434	6	15	\N	27	33	19	3	1	BOTH	PRACTICE	f
+1435	6	15	\N	27	33	19	1	3	BOTH	PRACTICE	f
+1436	6	15	\N	27	33	19	5	3	BOTH	PRACTICE	f
+1437	6	15	\N	27	33	19	3	2	BOTH	PRACTICE	f
+1438	6	15	\N	27	33	19	1	2	BOTH	PRACTICE	f
+1439	6	16	\N	15	71	14	1	3	BOTH	LECTURE	f
+1440	6	16	\N	15	71	14	2	2	BOTH	LECTURE	f
+1441	6	16	\N	14	79	36	5	3	BOTH	PRACTICE	f
+1442	6	16	\N	27	59	22	3	3	BOTH	PRACTICE	f
+1443	6	16	\N	27	59	22	4	1	BOTH	PRACTICE	f
+1444	6	16	\N	27	59	22	4	2	BOTH	PRACTICE	f
+1445	6	16	\N	27	59	22	3	4	BOTH	PRACTICE	f
+1446	6	16	\N	27	59	22	1	4	BOTH	PRACTICE	f
+1447	6	16	\N	27	59	22	2	3	BOTH	PRACTICE	f
+1448	6	18	35	14	5	34	1	2	BOTH	PRACTICE	f
+1449	6	18	35	14	5	32	3	2	BOTH	PRACTICE	f
+1450	6	18	36	14	5	32	2	1	BOTH	PRACTICE	f
+1451	6	18	36	14	5	34	5	4	BOTH	PRACTICE	f
+1452	6	18	35	14	68	34	4	4	BOTH	PRACTICE	f
+1453	6	18	35	14	68	36	1	3	BOTH	PRACTICE	f
+1454	6	18	36	14	68	32	4	2	BOTH	PRACTICE	f
+1455	6	18	36	14	68	34	2	2	BOTH	PRACTICE	f
+1486	6	19	37	29	21	34	4	2	BOTH	LAB	f
+1487	6	19	37	29	21	34	3	2	BOTH	LAB	f
+1488	6	19	37	29	21	40	2	2	BOTH	LAB	f
+1489	6	19	37	29	21	40	5	3	BOTH	LAB	f
+1490	6	19	38	29	21	40	1	2	BOTH	LAB	f
+1491	6	19	38	29	21	40	1	3	BOTH	LAB	f
+1492	6	19	38	29	21	34	4	1	BOTH	LAB	f
+1493	6	19	38	29	21	34	2	1	BOTH	LAB	f
+1494	6	19	37	29	17	39	3	3	BOTH	LAB	f
+1495	6	19	37	29	17	39	5	4	BOTH	LAB	f
+1496	6	19	37	29	17	39	1	2	BOTH	LAB	f
+1497	6	19	37	29	17	39	2	3	BOTH	LAB	f
+1498	6	23	45	59	29	32	4	3	BOTH	PRACTICE	f
+1499	6	23	45	59	29	7	1	3	BOTH	PRACTICE	f
+1500	6	23	45	59	29	32	3	1	BOTH	PRACTICE	f
+1501	6	23	45	59	29	32	5	1	BOTH	PRACTICE	f
+1502	6	23	46	59	29	36	2	1	BOTH	PRACTICE	f
+1503	6	23	46	59	29	36	2	2	BOTH	PRACTICE	f
+1504	6	23	46	59	29	32	1	4	BOTH	PRACTICE	f
+1505	6	23	46	59	29	36	3	2	BOTH	PRACTICE	f
+1506	6	23	45	59	10	36	4	4	BOTH	PRACTICE	f
+1507	6	23	45	59	10	32	5	2	BOTH	PRACTICE	f
+1508	6	23	45	59	10	7	5	3	BOTH	PRACTICE	f
+1509	6	23	45	59	10	15	3	2	BOTH	PRACTICE	f
+1510	6	23	46	59	10	32	2	3	BOTH	PRACTICE	f
+1511	6	23	46	59	10	36	4	3	BOTH	PRACTICE	f
+1512	6	23	46	59	10	32	1	1	BOTH	PRACTICE	f
+1513	6	23	46	59	10	36	2	4	BOTH	PRACTICE	f
+1517	6	26	\N	96	6	25	1	1	BOTH	PRACTICE	f
+1518	6	26	\N	96	6	25	2	2	BOTH	PRACTICE	f
+1519	6	26	\N	96	46	26	4	3	BOTH	PRACTICE	f
+1520	6	26	\N	96	46	26	3	4	BOTH	PRACTICE	f
+1529	6	31	61	37	28	40	1	6	BOTH	LAB	f
+1530	6	31	61	37	28	40	2	6	BOTH	LAB	f
+1531	6	31	61	37	28	40	4	7	BOTH	LAB	f
+1532	6	31	62	37	28	40	3	5	BOTH	LAB	f
+1533	6	31	62	37	28	40	5	7	BOTH	LAB	f
+1534	6	31	62	37	28	40	1	5	BOTH	LAB	f
+1545	6	36	71	46	28	40	2	5	BOTH	LAB	f
+1546	6	36	71	46	28	40	5	4	BOTH	LAB	f
+1547	6	36	71	46	28	40	1	4	BOTH	LAB	f
+1548	6	36	72	46	28	40	3	4	BOTH	LAB	f
+1549	6	36	71	46	30	38	4	5	BOTH	LAB	f
+1550	6	36	71	46	30	38	2	6	BOTH	LAB	f
+1551	6	36	71	46	30	38	1	5	BOTH	LAB	f
+1552	6	36	72	46	30	38	4	6	BOTH	LAB	f
+1553	6	36	72	46	30	38	3	5	BOTH	LAB	f
+1554	6	36	72	46	30	38	5	5	BOTH	LAB	f
+1555	6	40	79	69	81	32	2	7	BOTH	PRACTICE	f
+1556	6	40	79	69	81	32	3	5	BOTH	PRACTICE	f
+1557	6	40	79	69	81	32	3	6	BOTH	PRACTICE	f
+1558	6	40	79	69	81	32	1	7	BOTH	PRACTICE	f
+1559	6	40	79	69	81	32	5	7	BOTH	PRACTICE	f
+1560	6	40	80	69	81	32	4	6	BOTH	PRACTICE	f
+1561	6	40	80	69	81	32	4	7	BOTH	PRACTICE	f
+1562	6	40	80	69	81	32	1	6	BOTH	PRACTICE	f
+1563	6	40	80	69	81	32	5	6	BOTH	PRACTICE	f
+1564	6	40	80	69	81	32	2	6	BOTH	PRACTICE	f
+1565	6	40	79	69	29	32	3	7	BOTH	PRACTICE	f
+1566	6	40	79	69	29	32	1	5	BOTH	PRACTICE	f
+1567	6	40	79	69	29	34	4	7	BOTH	PRACTICE	f
+1568	6	40	79	69	29	32	2	5	BOTH	PRACTICE	f
+1569	6	40	79	69	29	34	5	6	BOTH	PRACTICE	f
+1570	6	40	80	69	29	34	5	7	BOTH	PRACTICE	f
+1571	6	40	80	69	29	34	2	7	BOTH	PRACTICE	f
+1572	6	40	80	69	29	34	1	7	BOTH	PRACTICE	f
+1573	6	40	80	69	29	34	3	6	BOTH	PRACTICE	f
+1574	6	40	80	69	29	32	4	5	BOTH	PRACTICE	f
+1575	6	41	\N	71	34	7	5	7	BOTH	PRACTICE	f
+1576	6	41	\N	71	34	7	4	5	BOTH	PRACTICE	f
+1577	6	37	73	74	83	34	3	7	BOTH	PRACTICE	f
+1578	6	37	73	74	83	34	1	6	BOTH	PRACTICE	f
+1579	6	37	74	74	83	34	2	6	BOTH	PRACTICE	f
+1580	6	37	74	74	83	36	5	7	BOTH	PRACTICE	f
+1581	6	37	73	74	63	36	4	7	BOTH	PRACTICE	f
+1582	6	37	74	74	63	34	4	6	BOTH	PRACTICE	f
+1583	6	42	\N	87	19	15	3	6	BOTH	PRACTICE	f
+1584	6	42	\N	87	19	15	4	5	BOTH	PRACTICE	f
+1585	6	42	\N	87	19	15	5	6	BOTH	PRACTICE	f
+1586	6	42	\N	87	19	15	1	5	BOTH	PRACTICE	f
+1587	6	43	\N	110	72	9	5	7	BOTH	PRACTICE	f
+1590	6	45	\N	116	82	8	3	7	BOTH	PRACTICE	f
+1591	6	45	\N	116	82	8	4	5	BOTH	PRACTICE	f
+1594	6	47	\N	49	60	7	1	7	BOTH	PRACTICE	f
+1595	6	47	\N	49	60	7	3	5	BOTH	PRACTICE	f
+1596	6	47	\N	49	60	7	5	5	BOTH	PRACTICE	f
+1597	6	47	\N	50	30	38	2	5	BOTH	LAB	f
+1598	6	47	\N	50	30	38	4	7	BOTH	LAB	f
+1599	6	51	\N	92	1	7	2	7	BOTH	PRACTICE	f
+1600	6	51	\N	92	1	15	1	7	BOTH	PRACTICE	f
+1601	6	51	\N	92	1	15	5	7	BOTH	PRACTICE	f
+1602	6	51	\N	92	1	7	4	6	BOTH	PRACTICE	f
+1603	6	49	\N	95	34	15	4	6	BOTH	PRACTICE	f
+1604	6	49	\N	95	34	7	5	6	BOTH	PRACTICE	f
+1605	6	50	\N	89	19	35	5	7	BOTH	PRACTICE	f
+1606	6	50	\N	89	19	35	4	6	BOTH	PRACTICE	f
+1607	6	50	\N	89	19	36	1	6	BOTH	PRACTICE	f
+1608	6	3	\N	1	20	30	2	2	BOTH	LECTURE	f
+1609	6	3	5	3	78	16	4	3	BOTH	PRACTICE	f
+1610	6	3	6	3	78	16	5	3	BOTH	PRACTICE	f
+1611	6	3	5	4	62	15	1	4	BOTH	PRACTICE	f
+1612	6	3	6	4	62	15	3	3	BOTH	PRACTICE	f
+1613	6	3	\N	5	71	14	1	2	BOTH	LECTURE	f
+1614	6	3	\N	7	26	7	2	3	BOTH	LECTURE	f
+1615	6	3	5	8	94	21	5	4	BOTH	LAB	f
+1616	6	3	6	8	94	21	4	3	BOTH	LAB	f
+1617	6	3	\N	9	56	10	3	2	BOTH	LECTURE	f
+1618	6	3	\N	10	69	2	1	3	BOTH	LECTURE	f
+1619	6	3	5	14	79	36	5	2	BOTH	PRACTICE	f
+1620	6	3	6	14	79	32	3	4	BOTH	PRACTICE	f
+1621	6	3	5	14	74	15	2	1	BOTH	PRACTICE	f
+1622	6	3	6	14	74	36	4	2	BOTH	PRACTICE	f
+1623	6	6	\N	63	80	27	2	2	BOTH	LECTURE	f
+1624	6	10	\N	7	13	12	2	3	BOTH	LECTURE	f
+1625	6	10	\N	7	13	12	4	3	BOTH	LECTURE	f
+1626	6	10	\N	19	70	24	3	3	BOTH	LECTURE	f
+1627	6	11	\N	7	13	12	2	1	BOTH	LECTURE	f
+1628	6	11	\N	7	13	12	4	2	BOTH	LECTURE	f
+1629	6	11	\N	19	70	24	3	2	BOTH	LECTURE	f
+1630	6	7	\N	1	20	30	2	1	BOTH	LECTURE	f
+1631	6	7	13	3	78	16	5	1	BOTH	PRACTICE	f
+1632	6	7	14	3	78	16	4	2	BOTH	PRACTICE	f
+1633	6	7	13	4	62	15	1	2	BOTH	PRACTICE	f
+1634	6	7	14	4	62	35	3	2	BOTH	PRACTICE	f
+1635	6	7	\N	5	71	14	1	1	BOTH	LECTURE	f
+1636	6	7	\N	7	26	7	2	2	BOTH	LECTURE	f
+1637	6	7	13	8	94	21	5	2	BOTH	LAB	f
+1638	6	7	14	8	94	21	3	3	BOTH	LAB	f
+1639	6	7	\N	9	56	10	4	4	BOTH	LECTURE	f
+1640	6	7	\N	10	69	2	2	3	BOTH	LECTURE	f
+1641	6	7	13	14	79	34	1	4	BOTH	PRACTICE	f
+1642	6	7	14	14	79	15	4	3	BOTH	PRACTICE	f
+1643	6	7	13	14	74	15	5	3	BOTH	PRACTICE	f
+1644	6	7	14	14	74	36	3	4	BOTH	PRACTICE	f
+1645	6	8	\N	1	20	30	2	4	BOTH	LECTURE	f
+1646	6	8	15	3	78	16	5	4	BOTH	PRACTICE	f
+1647	6	8	16	3	78	16	4	1	BOTH	PRACTICE	f
+1648	6	8	15	4	62	15	1	1	BOTH	PRACTICE	f
+1649	6	8	16	4	62	34	3	1	BOTH	PRACTICE	f
+1650	6	8	\N	5	71	14	2	1	BOTH	LECTURE	f
+1651	6	8	\N	7	26	7	3	3	BOTH	LECTURE	f
+1652	6	8	15	8	94	21	1	3	BOTH	LAB	f
+1653	6	8	16	8	94	21	4	2	BOTH	LAB	f
+1654	6	8	\N	9	56	10	5	1	BOTH	LECTURE	f
+1655	6	8	\N	10	69	2	2	2	BOTH	LECTURE	f
+1656	6	8	15	14	79	36	1	2	BOTH	PRACTICE	f
+1657	6	8	16	14	79	3	3	2	BOTH	PRACTICE	f
+1658	6	8	15	14	74	35	4	3	BOTH	PRACTICE	f
+1659	6	8	16	14	74	36	5	4	BOTH	PRACTICE	f
+1660	6	12	\N	1	20	30	5	2	BOTH	LECTURE	f
+1661	6	12	23	3	78	16	2	1	BOTH	PRACTICE	f
+1662	6	12	24	3	78	16	1	1	BOTH	PRACTICE	f
+1663	6	12	23	4	62	15	4	4	BOTH	PRACTICE	f
+1664	6	12	24	4	62	2	4	3	BOTH	PRACTICE	f
+1665	6	12	\N	5	71	14	3	3	BOTH	LECTURE	f
+1666	6	12	\N	7	26	7	3	4	BOTH	LECTURE	f
+1667	6	12	23	8	94	21	1	1	BOTH	LAB	f
+1668	6	12	24	8	94	21	5	1	BOTH	LAB	f
+1669	6	12	\N	9	56	10	2	3	BOTH	LECTURE	f
+1670	6	12	\N	10	69	2	2	4	BOTH	LECTURE	f
+1671	6	12	23	14	79	36	5	1	BOTH	PRACTICE	f
+1672	6	12	24	14	79	7	4	4	BOTH	PRACTICE	f
+1673	6	12	23	14	74	7	1	2	BOTH	PRACTICE	f
+1674	6	12	24	14	74	36	3	1	BOTH	PRACTICE	f
+1675	6	13	\N	1	20	30	5	3	BOTH	LECTURE	f
+1676	6	13	25	3	78	16	1	2	BOTH	PRACTICE	f
+1677	6	13	26	3	78	16	2	2	BOTH	PRACTICE	f
+1678	6	13	25	4	62	15	4	2	BOTH	PRACTICE	f
+1679	6	13	26	4	62	15	4	1	BOTH	PRACTICE	f
+1680	6	13	\N	5	71	14	3	2	BOTH	LECTURE	f
+1681	6	13	\N	7	26	35	2	1	BOTH	LECTURE	f
+1682	6	13	25	8	94	21	1	4	BOTH	LAB	f
+1683	6	13	26	8	94	21	3	1	BOTH	LAB	f
+1684	6	13	\N	9	56	10	5	2	BOTH	LECTURE	f
+1685	6	13	\N	10	69	2	3	3	BOTH	LECTURE	f
+1686	6	13	25	14	79	36	1	1	BOTH	PRACTICE	f
+1687	6	13	26	14	79	7	4	2	BOTH	PRACTICE	f
+1688	6	13	25	14	74	36	2	3	BOTH	PRACTICE	f
+1689	6	13	26	14	74	7	5	1	BOTH	PRACTICE	f
+1690	6	14	\N	1	20	30	5	4	BOTH	LECTURE	f
+1691	6	14	27	3	78	16	2	3	BOTH	PRACTICE	f
+1692	6	14	28	3	78	16	1	3	BOTH	PRACTICE	f
+1693	6	14	27	4	62	15	2	4	BOTH	PRACTICE	f
+1694	6	14	28	4	62	15	5	1	BOTH	PRACTICE	f
+1695	6	14	\N	5	71	14	3	4	BOTH	LECTURE	f
+1696	6	14	\N	7	26	7	4	1	BOTH	LECTURE	f
+1697	6	14	27	8	94	21	3	2	BOTH	LAB	f
+1698	6	14	28	8	94	21	4	4	BOTH	LAB	f
+1699	6	14	\N	9	56	10	1	2	BOTH	LECTURE	f
+1700	6	14	\N	10	69	2	3	1	BOTH	LECTURE	f
+1701	6	14	27	14	79	32	3	3	BOTH	PRACTICE	f
+1702	6	14	28	14	79	7	2	4	BOTH	PRACTICE	f
+1703	6	14	27	14	74	7	5	2	BOTH	PRACTICE	f
+1704	6	14	28	14	74	7	1	1	BOTH	PRACTICE	f
+1705	6	17	\N	15	71	14	3	1	BOTH	LECTURE	f
+1706	6	17	\N	15	71	14	5	1	BOTH	LECTURE	f
+1707	6	17	\N	12	42	35	1	3	BOTH	PRACTICE	f
+1708	6	17	\N	14	68	15	2	3	BOTH	PRACTICE	f
+1709	6	17	\N	17	94	21	4	1	BOTH	LAB	f
+1710	6	17	\N	17	94	21	2	1	BOTH	LAB	f
+1711	6	17	\N	27	33	19	5	2	BOTH	PRACTICE	f
+1712	6	17	\N	27	33	19	1	4	BOTH	PRACTICE	f
+1713	6	17	\N	27	33	19	3	3	BOTH	PRACTICE	f
+1714	6	17	\N	27	33	19	4	3	BOTH	PRACTICE	f
+1715	6	17	\N	27	33	19	4	2	BOTH	PRACTICE	f
+1716	6	17	\N	27	33	19	3	4	BOTH	PRACTICE	f
+1720	6	27	\N	96	6	25	2	3	BOTH	PRACTICE	f
+1721	6	27	\N	96	6	25	1	2	BOTH	PRACTICE	f
+1722	6	27	\N	96	46	26	5	3	BOTH	PRACTICE	f
+1723	6	27	\N	96	46	26	3	1	BOTH	PRACTICE	f
+1727	6	28	\N	96	6	25	2	4	BOTH	PRACTICE	f
+1728	6	28	\N	96	6	25	3	4	BOTH	PRACTICE	f
+1729	6	28	\N	96	46	26	1	3	BOTH	PRACTICE	f
+1730	6	28	\N	96	46	26	2	1	BOTH	PRACTICE	f
+1731	6	20	\N	15	71	14	5	2	BOTH	LECTURE	f
+1732	6	20	\N	15	71	14	5	3	BOTH	LECTURE	f
+1733	6	20	\N	12	42	7	1	4	BOTH	PRACTICE	f
+1734	6	20	\N	14	68	35	2	4	BOTH	PRACTICE	f
+1735	6	20	\N	27	33	19	4	1	BOTH	PRACTICE	f
+1736	6	20	\N	27	33	19	1	1	BOTH	PRACTICE	f
+1737	6	20	\N	27	33	19	2	2	BOTH	PRACTICE	f
+1738	6	20	\N	27	33	19	2	3	BOTH	PRACTICE	f
+1739	6	20	\N	27	33	19	5	4	BOTH	PRACTICE	f
+1740	6	20	\N	27	33	19	5	1	BOTH	PRACTICE	f
+1741	6	21	\N	15	71	14	5	4	BOTH	LECTURE	f
+1742	6	21	\N	15	71	14	4	4	BOTH	LECTURE	f
+1743	6	21	\N	12	42	35	1	2	BOTH	PRACTICE	f
+1744	6	21	\N	14	68	2	2	1	BOTH	PRACTICE	f
+1745	6	22	\N	15	71	14	4	3	BOTH	LECTURE	f
+1746	6	22	\N	12	42	35	5	3	BOTH	PRACTICE	f
+1747	6	22	\N	14	68	2	1	2	BOTH	PRACTICE	f
+1748	6	24	\N	12	42	15	5	2	BOTH	PRACTICE	f
+1749	6	24	\N	14	68	35	1	1	BOTH	PRACTICE	f
+1750	6	25	\N	12	42	2	5	1	BOTH	PRACTICE	f
+1751	6	25	\N	14	68	2	4	1	BOTH	PRACTICE	f
+1753	6	29	\N	96	6	25	1	3	BOTH	PRACTICE	f
+1754	6	29	\N	96	6	25	3	3	BOTH	PRACTICE	f
+1755	6	30	\N	96	6	25	2	1	BOTH	PRACTICE	f
+1756	6	30	\N	96	6	25	1	4	BOTH	PRACTICE	f
+1757	6	38	75	74	83	35	1	7	BOTH	PRACTICE	f
+1758	6	38	75	74	83	7	3	6	BOTH	PRACTICE	f
+1759	6	38	76	74	83	36	5	6	BOTH	PRACTICE	f
+1760	6	38	76	74	83	36	2	7	BOTH	PRACTICE	f
+1761	6	38	75	74	63	34	4	5	BOTH	PRACTICE	f
+1762	6	38	76	74	63	2	5	7	BOTH	PRACTICE	f
+1763	6	39	77	74	83	34	1	5	BOTH	PRACTICE	f
+1764	6	39	77	74	83	34	3	5	BOTH	PRACTICE	f
+1765	6	39	78	74	83	34	2	5	BOTH	PRACTICE	f
+1766	6	39	78	74	83	32	5	5	BOTH	PRACTICE	f
+1767	6	39	77	74	63	35	3	6	BOTH	PRACTICE	f
+1768	6	39	78	74	63	35	5	6	BOTH	PRACTICE	f
+1769	6	44	\N	110	72	9	5	6	BOTH	PRACTICE	f
+1770	6	46	\N	116	82	8	4	6	BOTH	PRACTICE	f
+1771	6	46	\N	116	82	8	3	6	BOTH	PRACTICE	f
+1774	6	48	\N	49	60	2	5	6	BOTH	PRACTICE	f
+1775	6	48	\N	49	60	2	3	6	BOTH	PRACTICE	f
+1776	6	48	\N	49	60	7	1	6	BOTH	PRACTICE	f
+1777	6	48	\N	50	30	38	2	7	BOTH	LAB	f
+1778	6	48	\N	50	30	38	3	7	BOTH	LAB	f
+1779	7	1	\N	1	20	30	4	4	BOTH	LECTURE	f
+1780	7	1	1	3	78	16	1	2	BOTH	PRACTICE	f
+1781	7	1	2	3	78	16	2	2	BOTH	PRACTICE	f
+1782	7	1	1	4	62	15	3	2	BOTH	PRACTICE	f
+1783	7	1	2	4	62	15	5	1	BOTH	PRACTICE	f
+1784	7	1	\N	5	71	14	1	4	BOTH	LECTURE	f
+1785	7	1	\N	7	26	7	5	2	BOTH	LECTURE	f
+1786	7	1	1	8	94	21	3	3	BOTH	LAB	f
+1787	7	1	2	8	94	21	2	3	BOTH	LAB	f
+1788	7	1	\N	9	56	10	4	2	BOTH	LECTURE	f
+1789	7	1	\N	10	69	2	4	3	BOTH	LECTURE	f
+1790	7	1	1	14	79	32	3	4	BOTH	PRACTICE	f
+1791	7	1	2	14	79	32	2	4	BOTH	PRACTICE	f
+1792	7	1	1	14	74	32	1	3	BOTH	PRACTICE	f
+1793	7	1	2	14	74	32	5	4	BOTH	PRACTICE	f
+1794	7	2	3	3	14	34	3	4	BOTH	PRACTICE	f
+1795	7	2	4	3	14	32	5	2	BOTH	PRACTICE	f
+1796	7	2	\N	7	26	7	1	3	BOTH	LECTURE	f
+1797	7	2	3	14	16	32	2	2	BOTH	PRACTICE	f
+1798	7	2	4	14	16	32	4	3	BOTH	PRACTICE	f
+1799	7	2	3	14	64	32	2	3	BOTH	PRACTICE	f
+1800	7	2	4	14	64	32	5	3	BOTH	PRACTICE	f
+1801	7	4	7	1	38	18	1	3	BOTH	PRACTICE	f
+1802	7	4	8	1	38	18	4	1	BOTH	PRACTICE	f
+1803	7	4	\N	7	11	7	3	3	BOTH	LECTURE	f
+1804	7	4	\N	7	11	7	2	3	BOTH	LECTURE	f
+1805	7	5	\N	63	80	27	4	2	BOTH	LECTURE	f
+1806	7	9	\N	7	13	12	5	1	BOTH	LECTURE	f
+1807	7	9	\N	7	13	12	3	2	BOTH	LECTURE	f
+1808	7	9	\N	19	70	24	1	4	BOTH	LECTURE	f
+1809	7	15	\N	15	71	14	1	3	BOTH	LECTURE	f
+1810	7	15	\N	15	71	14	4	1	BOTH	LECTURE	f
+1811	7	15	\N	12	42	7	3	4	BOTH	PRACTICE	f
+1812	7	15	\N	14	68	7	5	4	BOTH	PRACTICE	f
+1813	7	15	\N	17	94	21	2	2	BOTH	LAB	f
+1814	7	15	\N	17	94	21	1	4	BOTH	LAB	f
+1815	7	15	\N	27	33	19	4	2	BOTH	PRACTICE	f
+1816	7	15	\N	27	33	19	2	3	BOTH	PRACTICE	f
+1817	7	15	\N	27	33	19	3	3	BOTH	PRACTICE	f
+1818	7	15	\N	27	33	19	5	3	BOTH	PRACTICE	f
+1819	7	15	\N	27	33	19	4	3	BOTH	PRACTICE	f
+1820	7	15	\N	27	33	19	2	4	BOTH	PRACTICE	f
+1821	7	16	\N	15	71	14	1	2	BOTH	LECTURE	f
+1822	7	16	\N	15	71	14	4	2	BOTH	LECTURE	f
+1823	7	16	\N	14	79	34	3	3	BOTH	PRACTICE	f
+1824	7	16	\N	27	59	22	5	2	BOTH	PRACTICE	f
+1825	7	16	\N	27	59	22	2	4	BOTH	PRACTICE	f
+1826	7	16	\N	27	59	22	5	3	BOTH	PRACTICE	f
+1827	7	16	\N	27	59	22	4	3	BOTH	PRACTICE	f
+1828	7	16	\N	27	59	22	2	3	BOTH	PRACTICE	f
+1829	7	16	\N	27	59	22	3	4	BOTH	PRACTICE	f
+1830	7	18	35	14	5	32	3	2	BOTH	PRACTICE	f
+1831	7	18	35	14	5	32	4	4	BOTH	PRACTICE	f
+1832	7	18	36	14	5	32	5	1	BOTH	PRACTICE	f
+1833	7	18	36	14	5	34	5	2	BOTH	PRACTICE	f
+1834	7	18	35	14	68	34	2	4	BOTH	PRACTICE	f
+1835	7	18	35	14	68	32	1	4	BOTH	PRACTICE	f
+1836	7	18	36	14	68	34	1	3	BOTH	PRACTICE	f
+1837	7	18	36	14	68	34	2	3	BOTH	PRACTICE	f
+1838	7	19	37	29	21	34	3	1	BOTH	LAB	f
+1839	7	19	37	29	21	34	5	4	BOTH	LAB	f
+1840	7	19	37	29	21	34	4	3	BOTH	LAB	f
+1841	7	19	37	29	21	34	1	1	BOTH	LAB	f
+1842	7	19	38	29	21	34	2	1	BOTH	LAB	f
+1843	7	19	38	29	21	34	2	2	BOTH	LAB	f
+1844	7	19	38	29	21	34	4	2	BOTH	LAB	f
+1845	7	19	38	29	21	34	3	2	BOTH	LAB	f
+1846	7	19	37	29	17	39	1	2	BOTH	LAB	f
+1847	7	19	37	29	17	39	5	1	BOTH	LAB	f
+1848	7	19	37	29	17	39	1	3	BOTH	LAB	f
+1849	7	19	37	29	17	39	5	2	BOTH	LAB	f
+1850	7	19	38	29	17	39	2	3	BOTH	LAB	f
+1851	7	19	38	29	17	39	3	3	BOTH	LAB	f
+1852	7	19	38	29	17	39	4	3	BOTH	LAB	f
+1853	7	19	38	29	17	39	4	4	BOTH	LAB	f
+1854	7	23	45	59	29	36	5	2	BOTH	PRACTICE	f
+1855	7	23	45	59	29	36	3	4	BOTH	PRACTICE	f
+1856	7	23	45	59	29	32	4	2	BOTH	PRACTICE	f
+1857	7	23	45	59	29	36	2	2	BOTH	PRACTICE	f
+1858	7	23	46	59	29	32	1	2	BOTH	PRACTICE	f
+1859	7	23	46	59	29	36	1	3	BOTH	PRACTICE	f
+1860	7	23	46	59	29	34	5	3	BOTH	PRACTICE	f
+1861	7	23	46	59	29	32	4	1	BOTH	PRACTICE	f
+1862	7	23	45	59	10	36	2	3	BOTH	PRACTICE	f
+1863	7	23	45	59	10	36	3	2	BOTH	PRACTICE	f
+1864	7	23	45	59	10	36	2	4	BOTH	PRACTICE	f
+1865	7	23	45	59	10	32	3	3	BOTH	PRACTICE	f
+1866	7	23	46	59	10	36	5	4	BOTH	PRACTICE	f
+1867	7	23	46	59	10	34	1	4	BOTH	PRACTICE	f
+1868	7	23	46	59	10	36	4	2	BOTH	PRACTICE	f
+1869	7	23	46	59	10	36	4	3	BOTH	PRACTICE	f
+1870	7	26	\N	96	6	25	1	2	BOTH	PRACTICE	f
+1871	7	26	\N	96	6	25	4	2	BOTH	PRACTICE	f
+1872	7	26	\N	96	46	26	2	2	BOTH	PRACTICE	f
+1873	7	26	\N	96	46	26	5	3	BOTH	PRACTICE	f
+1874	7	31	61	37	28	40	5	5	BOTH	LAB	f
+1875	7	31	61	37	28	40	4	7	BOTH	LAB	f
+1876	7	31	61	37	28	40	3	7	BOTH	LAB	f
+1877	7	31	62	37	28	40	1	5	BOTH	LAB	f
+1878	7	31	62	37	28	40	2	7	BOTH	LAB	f
+1879	7	31	62	37	28	40	1	6	BOTH	LAB	f
+1880	7	31	61	37	17	39	4	5	BOTH	LAB	f
+1881	7	31	61	37	17	39	5	6	BOTH	LAB	f
+1882	7	31	61	37	17	39	3	5	BOTH	LAB	f
+1883	7	31	62	37	17	39	2	5	BOTH	LAB	f
+1884	7	31	62	37	17	39	2	6	BOTH	LAB	f
+1885	7	31	62	37	17	39	3	6	BOTH	LAB	f
+1886	7	36	71	46	28	40	1	7	BOTH	LAB	f
+1887	7	36	71	46	28	40	3	6	BOTH	LAB	f
+1888	7	36	71	46	28	40	2	6	BOTH	LAB	f
+1889	7	36	72	46	28	40	4	6	BOTH	LAB	f
+1890	7	36	72	46	28	40	5	6	BOTH	LAB	f
+1891	7	36	72	46	28	40	5	7	BOTH	LAB	f
+1892	7	36	71	46	30	38	2	7	BOTH	LAB	f
+1893	7	36	71	46	30	38	3	7	BOTH	LAB	f
+1894	7	36	71	46	30	38	4	5	BOTH	LAB	f
+1895	7	36	72	46	30	38	1	7	BOTH	LAB	f
+1896	7	36	72	46	30	38	2	6	BOTH	LAB	f
+1897	7	36	72	46	30	38	4	7	BOTH	LAB	f
+1898	7	40	79	69	81	32	1	7	BOTH	PRACTICE	f
+1899	7	40	79	69	81	32	4	5	BOTH	PRACTICE	f
+1900	7	40	79	69	81	32	2	7	BOTH	PRACTICE	f
+1901	7	40	79	69	81	32	3	6	BOTH	PRACTICE	f
+1902	7	40	79	69	81	32	5	6	BOTH	PRACTICE	f
+1903	7	40	80	69	81	32	4	6	BOTH	PRACTICE	f
+1904	7	40	80	69	81	32	3	7	BOTH	PRACTICE	f
+1905	7	40	80	69	81	32	5	5	BOTH	PRACTICE	f
+1906	7	40	80	69	81	32	2	6	BOTH	PRACTICE	f
+1907	7	40	80	69	81	32	1	6	BOTH	PRACTICE	f
+1908	7	40	79	69	29	32	5	7	BOTH	PRACTICE	f
+1909	7	40	79	69	29	34	4	6	BOTH	PRACTICE	f
+1910	7	40	79	69	29	34	3	7	BOTH	PRACTICE	f
+1911	7	40	79	69	29	32	1	5	BOTH	PRACTICE	f
+1912	7	40	79	69	29	34	1	6	BOTH	PRACTICE	f
+1913	7	40	80	69	29	34	2	7	BOTH	PRACTICE	f
+1914	7	40	80	69	29	32	4	7	BOTH	PRACTICE	f
+1915	7	40	80	69	29	34	5	6	BOTH	PRACTICE	f
+1916	7	40	80	69	29	34	3	6	BOTH	PRACTICE	f
+1917	7	40	80	69	29	32	2	5	BOTH	PRACTICE	f
+1918	7	41	\N	71	34	7	5	5	BOTH	PRACTICE	f
+1919	7	41	\N	71	34	7	1	7	BOTH	PRACTICE	f
+1920	7	37	73	74	83	36	5	6	BOTH	PRACTICE	f
+1921	7	37	73	74	83	36	1	6	BOTH	PRACTICE	f
+1922	7	37	74	74	83	36	3	6	BOTH	PRACTICE	f
+1923	7	37	74	74	83	34	4	5	BOTH	PRACTICE	f
+1924	7	37	73	74	63	34	2	5	BOTH	PRACTICE	f
+1925	7	37	74	74	63	36	4	6	BOTH	PRACTICE	f
+1926	7	42	\N	87	19	15	3	7	BOTH	PRACTICE	f
+1927	7	42	\N	87	19	15	4	7	BOTH	PRACTICE	f
+1928	7	42	\N	87	19	15	5	5	BOTH	PRACTICE	f
+1929	7	42	\N	87	19	15	1	5	BOTH	PRACTICE	f
+1930	7	43	\N	110	72	9	3	7	BOTH	PRACTICE	f
+1931	7	45	\N	116	82	8	1	5	BOTH	PRACTICE	f
+1932	7	45	\N	116	82	8	5	6	BOTH	PRACTICE	f
+1933	7	47	\N	49	60	7	5	7	BOTH	PRACTICE	f
+1934	7	47	\N	49	60	7	3	5	BOTH	PRACTICE	f
+1935	7	47	\N	49	60	7	4	7	BOTH	PRACTICE	f
+1936	7	47	\N	50	30	38	2	5	BOTH	LAB	f
+1937	7	47	\N	50	30	38	1	6	BOTH	LAB	f
+1938	7	51	\N	92	1	15	3	5	BOTH	PRACTICE	f
+1939	7	51	\N	92	1	7	4	5	BOTH	PRACTICE	f
+1940	7	51	\N	92	1	7	2	5	BOTH	PRACTICE	f
+1941	7	51	\N	92	1	7	1	5	BOTH	PRACTICE	f
+1942	7	49	\N	95	34	7	5	6	BOTH	PRACTICE	f
+1943	7	49	\N	95	34	7	1	6	BOTH	PRACTICE	f
+1944	7	50	\N	89	19	7	3	6	BOTH	PRACTICE	f
+1945	7	50	\N	89	19	15	1	6	BOTH	PRACTICE	f
+1946	7	50	\N	89	19	7	4	6	BOTH	PRACTICE	f
+1947	7	3	\N	1	20	30	4	3	BOTH	LECTURE	f
+1948	7	3	5	3	78	16	2	3	BOTH	PRACTICE	f
+1949	7	3	6	3	78	16	1	3	BOTH	PRACTICE	f
+1950	7	3	5	4	62	15	5	2	BOTH	PRACTICE	f
+1951	7	3	6	4	62	15	3	3	BOTH	PRACTICE	f
+1952	7	3	\N	5	71	14	4	4	BOTH	LECTURE	f
+1953	7	3	\N	7	26	7	1	2	BOTH	LECTURE	f
+1954	7	3	5	8	94	21	2	4	BOTH	LAB	f
+1955	7	3	6	8	94	21	3	4	BOTH	LAB	f
+1956	7	3	\N	9	56	10	5	4	BOTH	LECTURE	f
+1957	7	3	\N	10	69	2	4	2	BOTH	LECTURE	f
+1958	7	3	5	14	79	7	3	2	BOTH	PRACTICE	f
+1959	7	3	6	14	79	15	2	3	BOTH	PRACTICE	f
+1960	7	3	5	14	74	36	5	3	BOTH	PRACTICE	f
+1961	7	3	6	14	74	36	1	4	BOTH	PRACTICE	f
+1962	7	6	\N	63	80	27	4	1	BOTH	LECTURE	f
+1963	7	10	\N	7	13	12	3	1	BOTH	LECTURE	f
+1964	7	10	\N	7	13	12	5	2	BOTH	LECTURE	f
+1965	7	10	\N	19	70	24	1	3	BOTH	LECTURE	f
+1966	7	11	\N	7	13	12	3	3	BOTH	LECTURE	f
+1967	7	11	\N	7	13	12	5	3	BOTH	LECTURE	f
+1968	7	11	\N	19	70	24	1	2	BOTH	LECTURE	f
+1969	7	7	\N	1	20	30	4	2	BOTH	LECTURE	f
+1970	7	7	13	3	78	16	1	4	BOTH	PRACTICE	f
+1971	7	7	14	3	78	16	2	4	BOTH	PRACTICE	f
+1972	7	7	13	4	62	15	3	1	BOTH	PRACTICE	f
+1973	7	7	14	4	62	15	5	3	BOTH	PRACTICE	f
+1974	7	7	\N	5	71	14	4	3	BOTH	LECTURE	f
+1975	7	7	\N	7	26	7	5	1	BOTH	LECTURE	f
+1976	7	7	13	8	94	21	3	2	BOTH	LAB	f
+1977	7	7	14	8	94	21	1	3	BOTH	LAB	f
+1978	7	7	\N	9	56	10	2	1	BOTH	LECTURE	f
+1979	7	7	\N	10	69	2	4	4	BOTH	LECTURE	f
+1980	7	7	13	14	79	7	2	2	BOTH	PRACTICE	f
+1981	7	7	14	14	79	32	3	1	BOTH	PRACTICE	f
+1982	7	7	13	14	74	34	1	2	BOTH	PRACTICE	f
+1983	7	7	14	14	74	35	5	2	BOTH	PRACTICE	f
+1984	7	8	\N	1	20	30	4	1	BOTH	LECTURE	f
+1985	7	8	15	3	78	16	2	1	BOTH	PRACTICE	f
+1986	7	8	16	3	78	16	1	1	BOTH	PRACTICE	f
+1987	7	8	15	4	62	15	3	4	BOTH	PRACTICE	f
+1988	7	8	16	4	62	15	5	4	BOTH	PRACTICE	f
+1989	7	8	\N	5	71	14	2	3	BOTH	LECTURE	f
+1990	7	8	\N	7	26	7	4	2	BOTH	LECTURE	f
+1991	7	8	15	8	94	21	1	2	BOTH	LAB	f
+1992	7	8	16	8	94	21	3	1	BOTH	LAB	f
+1993	7	8	\N	9	56	10	5	3	BOTH	LECTURE	f
+1994	7	8	\N	10	69	2	2	4	BOTH	LECTURE	f
+1995	7	8	15	14	79	15	1	3	BOTH	PRACTICE	f
+1996	7	8	16	14	79	34	5	1	BOTH	PRACTICE	f
+1997	7	8	15	14	74	7	4	3	BOTH	PRACTICE	f
+1998	7	8	16	14	74	35	3	2	BOTH	PRACTICE	f
+1999	7	12	\N	1	20	30	5	2	BOTH	LECTURE	f
+2000	7	12	23	3	78	16	4	1	BOTH	PRACTICE	f
+2001	7	12	24	3	78	16	3	4	BOTH	PRACTICE	f
+2002	7	12	23	4	62	15	2	4	BOTH	PRACTICE	f
+2003	7	12	24	4	62	15	1	2	BOTH	PRACTICE	f
+2004	7	12	\N	5	71	14	2	2	BOTH	LECTURE	f
+2005	7	12	\N	7	26	7	5	3	BOTH	LECTURE	f
+2006	7	12	23	8	94	21	1	1	BOTH	LAB	f
+2007	7	12	24	8	94	21	4	3	BOTH	LAB	f
+2008	7	12	\N	9	56	10	3	3	BOTH	LECTURE	f
+2009	7	12	\N	10	69	2	2	3	BOTH	LECTURE	f
+2010	7	12	23	14	79	36	1	2	BOTH	PRACTICE	f
+2011	7	12	24	14	79	34	4	4	BOTH	PRACTICE	f
+2012	7	12	23	14	74	36	3	1	BOTH	PRACTICE	f
+2013	7	12	24	14	74	36	5	1	BOTH	PRACTICE	f
+2014	7	13	\N	1	20	30	5	1	BOTH	LECTURE	f
+2015	7	13	25	3	78	16	4	2	BOTH	PRACTICE	f
+2016	7	13	26	3	78	16	3	3	BOTH	PRACTICE	f
+2017	7	13	25	4	62	15	1	1	BOTH	PRACTICE	f
+2018	7	13	26	4	62	35	2	3	BOTH	PRACTICE	f
+2019	7	13	\N	5	71	14	2	1	BOTH	LECTURE	f
+2020	7	13	\N	7	26	7	1	4	BOTH	LECTURE	f
+2021	7	13	25	8	94	21	4	4	BOTH	LAB	f
+2022	7	13	26	8	94	21	5	4	BOTH	LAB	f
+2023	7	13	\N	9	56	10	3	4	BOTH	LECTURE	f
+2024	7	13	\N	10	69	2	2	2	BOTH	LECTURE	f
+2025	7	13	25	14	79	15	4	3	BOTH	PRACTICE	f
+2026	7	13	26	14	79	32	1	1	BOTH	PRACTICE	f
+2027	7	13	25	14	74	36	3	3	BOTH	PRACTICE	f
+2028	7	13	26	14	74	36	4	4	BOTH	PRACTICE	f
+2029	7	14	\N	1	20	30	5	3	BOTH	LECTURE	f
+2030	7	14	27	3	78	16	4	3	BOTH	PRACTICE	f
+2031	7	14	28	3	78	16	3	2	BOTH	PRACTICE	f
+2032	7	14	27	4	62	15	2	2	BOTH	PRACTICE	f
+2033	7	14	28	4	62	35	1	3	BOTH	PRACTICE	f
+2034	7	14	\N	5	71	14	1	1	BOTH	LECTURE	f
+2035	7	14	\N	7	26	35	5	4	BOTH	LECTURE	f
+2036	7	14	27	8	94	21	2	1	BOTH	LAB	f
+2037	7	14	28	8	94	21	4	2	BOTH	LAB	f
+2038	7	14	\N	9	56	10	3	1	BOTH	LECTURE	f
+2039	7	14	\N	10	69	2	1	2	BOTH	LECTURE	f
+2040	7	14	27	14	79	15	4	2	BOTH	PRACTICE	f
+2041	7	14	28	14	79	32	2	1	BOTH	PRACTICE	f
+2042	7	14	27	14	74	35	3	4	BOTH	PRACTICE	f
+2043	7	14	28	14	74	35	2	2	BOTH	PRACTICE	f
+2044	7	17	\N	15	71	14	2	4	BOTH	LECTURE	f
+2045	7	17	\N	15	71	14	3	1	BOTH	LECTURE	f
+2046	7	17	\N	12	42	2	5	2	BOTH	PRACTICE	f
+2047	7	17	\N	14	68	35	1	2	BOTH	PRACTICE	f
+2048	7	17	\N	17	94	21	4	1	BOTH	LAB	f
+2049	7	17	\N	17	94	21	5	3	BOTH	LAB	f
+2050	7	17	\N	27	33	19	3	2	BOTH	PRACTICE	f
+2051	7	17	\N	27	33	19	1	3	BOTH	PRACTICE	f
+2052	7	17	\N	27	33	19	2	2	BOTH	PRACTICE	f
+2053	7	17	\N	27	33	19	4	4	BOTH	PRACTICE	f
+2054	7	17	\N	27	33	19	1	4	BOTH	PRACTICE	f
+2055	7	17	\N	27	33	19	5	4	BOTH	PRACTICE	f
+2056	7	27	\N	96	6	25	1	3	BOTH	PRACTICE	f
+2057	7	27	\N	96	6	25	4	3	BOTH	PRACTICE	f
+2058	7	27	\N	96	46	26	5	2	BOTH	PRACTICE	f
+2059	7	27	\N	96	46	26	2	3	BOTH	PRACTICE	f
+2060	7	28	\N	96	6	25	4	4	BOTH	PRACTICE	f
+2061	7	28	\N	96	6	25	1	1	BOTH	PRACTICE	f
+2062	7	28	\N	96	46	26	5	4	BOTH	PRACTICE	f
+2063	7	28	\N	96	46	26	2	4	BOTH	PRACTICE	f
+2064	7	20	\N	15	71	14	3	2	BOTH	LECTURE	f
+2065	7	20	\N	15	71	14	5	1	BOTH	LECTURE	f
+2066	7	20	\N	12	42	3	2	2	BOTH	PRACTICE	f
+2067	7	20	\N	14	68	7	1	1	BOTH	PRACTICE	f
+2068	7	20	\N	27	33	19	4	1	BOTH	PRACTICE	f
+2069	7	20	\N	27	33	19	5	2	BOTH	PRACTICE	f
+2070	7	20	\N	27	33	19	1	2	BOTH	PRACTICE	f
+2071	7	20	\N	27	33	19	3	4	BOTH	PRACTICE	f
+2072	7	20	\N	27	33	19	2	1	BOTH	PRACTICE	f
+2073	7	20	\N	27	33	19	3	1	BOTH	PRACTICE	f
+2074	7	21	\N	15	71	14	5	2	BOTH	LECTURE	f
+2075	7	21	\N	15	71	14	3	3	BOTH	LECTURE	f
+2076	7	21	\N	12	42	3	2	3	BOTH	PRACTICE	f
+2077	7	21	\N	14	68	35	4	2	BOTH	PRACTICE	f
+2078	7	22	\N	15	71	14	3	4	BOTH	LECTURE	f
+2079	7	22	\N	12	42	35	5	1	BOTH	PRACTICE	f
+2080	7	22	\N	14	68	8	2	2	BOTH	PRACTICE	f
+2081	7	24	\N	12	42	7	2	4	BOTH	PRACTICE	f
+2082	7	24	\N	14	68	35	4	3	BOTH	PRACTICE	f
+2083	7	25	\N	12	42	2	5	3	BOTH	PRACTICE	f
+2084	7	25	\N	14	68	2	2	1	BOTH	PRACTICE	f
+2085	7	29	\N	96	6	25	4	1	BOTH	PRACTICE	f
+2086	7	29	\N	96	6	25	1	4	BOTH	PRACTICE	f
+2087	7	29	\N	96	46	26	2	1	BOTH	PRACTICE	f
+2088	7	29	\N	96	46	26	5	1	BOTH	PRACTICE	f
+2089	7	30	\N	96	6	25	5	4	BOTH	PRACTICE	f
+2090	7	30	\N	96	6	25	2	4	BOTH	PRACTICE	f
+2091	7	30	\N	96	46	26	3	2	BOTH	PRACTICE	f
+2092	7	30	\N	96	46	26	4	1	BOTH	PRACTICE	f
+2093	7	32	63	37	28	40	4	5	BOTH	LAB	f
+2094	7	32	63	37	28	40	2	5	BOTH	LAB	f
+2095	7	32	63	37	28	40	3	5	BOTH	LAB	f
+2096	7	32	64	37	28	40	1	4	BOTH	LAB	f
+2097	7	32	64	37	28	40	5	4	BOTH	LAB	f
+2098	7	32	64	37	28	40	2	4	BOTH	LAB	f
+2099	7	32	63	37	17	39	4	6	BOTH	LAB	f
+2100	7	32	63	37	17	39	3	7	BOTH	LAB	f
+2101	7	32	63	37	17	39	5	5	BOTH	LAB	f
+2102	7	32	64	37	17	39	1	5	BOTH	LAB	f
+2103	7	38	75	74	83	34	5	5	BOTH	PRACTICE	f
+2104	7	38	75	74	83	34	1	5	BOTH	PRACTICE	f
+2105	7	38	76	74	83	32	3	5	BOTH	PRACTICE	f
+2106	7	38	76	74	83	15	4	6	BOTH	PRACTICE	f
+2107	7	38	75	74	63	34	2	6	BOTH	PRACTICE	f
+2108	7	38	76	74	63	34	4	7	BOTH	PRACTICE	f
+2109	7	39	77	74	83	36	3	7	BOTH	PRACTICE	f
+2110	7	39	77	74	83	34	5	7	BOTH	PRACTICE	f
+2111	7	39	78	74	83	36	4	7	BOTH	PRACTICE	f
+2112	7	39	78	74	83	34	1	7	BOTH	PRACTICE	f
+2113	7	39	77	74	63	36	2	7	BOTH	PRACTICE	f
+2114	7	39	78	74	63	36	4	5	BOTH	PRACTICE	f
+2115	7	44	\N	110	72	9	3	6	BOTH	PRACTICE	f
+2116	7	46	\N	116	82	8	5	5	BOTH	PRACTICE	f
+2117	7	46	\N	116	82	8	1	6	BOTH	PRACTICE	f
+2118	7	48	\N	49	60	35	4	6	BOTH	PRACTICE	f
+2119	7	48	\N	49	60	15	3	6	BOTH	PRACTICE	f
+2120	7	48	\N	49	60	15	5	6	BOTH	PRACTICE	f
+2121	7	48	\N	50	30	38	1	5	BOTH	LAB	f
+2122	7	48	\N	50	30	38	5	7	BOTH	LAB	f
+2123	7	36	71	40	4	36	5	5	BOTH	LAB	f
+2124	7	36	71	40	4	36	3	5	BOTH	LAB	f
+2125	7	36	71	40	4	36	1	5	BOTH	LAB	f
+2126	7	36	72	40	4	41	2	7	BOTH	LAB	f
+2127	7	36	72	40	4	41	3	6	BOTH	LAB	f
+2128	7	36	72	40	4	41	1	6	BOTH	LAB	f
+2129	7	36	71	40	61	41	4	6	BOTH	LAB	f
+2130	7	36	71	40	61	41	5	6	BOTH	LAB	f
+2131	7	36	72	40	61	41	5	5	BOTH	LAB	f
+2132	7	36	72	40	61	41	3	7	BOTH	LAB	f
+2133	7	18	35	33	21	40	3	3	BOTH	LAB	f
+2134	7	18	35	33	21	34	4	1	BOTH	LAB	f
+2135	7	18	35	33	21	40	3	4	BOTH	LAB	f
+2136	7	18	35	33	21	40	5	3	BOTH	LAB	f
+2137	7	18	36	33	21	41	1	4	BOTH	LAB	f
+2138	7	18	36	33	21	41	2	4	BOTH	LAB	f
+2139	7	18	36	33	21	40	4	4	BOTH	LAB	f
+2140	7	18	36	33	21	40	1	2	BOTH	LAB	f
+\.
+
+
+--
+-- Data for Name: schedule_versions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.schedule_versions (id, semester_id, status, created_at, updated_at, description) FROM stdin;
+1	2	DRAFT	2026-02-19 08:20:06.964313+05	2026-02-19 08:20:06.964313+05	Ручная генерация через скрипт
+2	2	DRAFT	2026-02-19 08:23:53.931242+05	2026-02-19 08:23:53.931242+05	Ручная генерация через скрипт
+3	1	DRAFT	2026-02-19 08:29:53.520187+05	2026-02-19 08:29:53.520187+05	Автогенерация
+4	1	DRAFT	2026-02-19 08:43:28.874686+05	2026-02-19 08:43:28.874686+05	Автогенерация
+5	2	DRAFT	2026-02-19 08:46:05.510321+05	2026-02-19 08:46:05.510321+05	Автогенерация
+6	1	DRAFT	2026-02-19 08:51:58.330673+05	2026-02-19 08:51:58.330673+05	Автогенерация
+7	1	DRAFT	2026-02-19 09:09:13.465299+05	2026-02-19 09:09:13.465299+05	Автогенерация
+\.
+
+
+--
+-- Data for Name: semesters; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.semesters (id, academic_year_id, number, start_date, end_date) FROM stdin;
+1	1	1	2025-09-01	2025-12-31
+2	1	2	2026-01-13	2026-06-30
+\.
+
+
+--
+-- Data for Name: subgroups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.subgroups (id, group_id, name) FROM stdin;
+1	1	Подгруппа 1
+2	1	Подгруппа 2
+3	2	Подгруппа 1
+4	2	Подгруппа 2
+5	3	Подгруппа 1
+6	3	Подгруппа 2
+7	4	Подгруппа 1
+8	4	Подгруппа 2
+9	5	Подгруппа 1
+10	5	Подгруппа 2
+11	6	Подгруппа 1
+12	6	Подгруппа 2
+13	7	Подгруппа 1
+14	7	Подгруппа 2
+15	8	Подгруппа 1
+16	8	Подгруппа 2
+17	9	Подгруппа 1
+18	9	Подгруппа 2
+19	10	Подгруппа 1
+20	10	Подгруппа 2
+21	11	Подгруппа 1
+22	11	Подгруппа 2
+23	12	Подгруппа 1
+24	12	Подгруппа 2
+25	13	Подгруппа 1
+26	13	Подгруппа 2
+27	14	Подгруппа 1
+28	14	Подгруппа 2
+29	15	Подгруппа 1
+30	15	Подгруппа 2
+31	16	Подгруппа 1
+32	16	Подгруппа 2
+33	17	Подгруппа 1
+34	17	Подгруппа 2
+35	18	Подгруппа 1
+36	18	Подгруппа 2
+37	19	Подгруппа 1
+38	19	Подгруппа 2
+39	20	Подгруппа 1
+40	20	Подгруппа 2
+41	21	Подгруппа 1
+42	21	Подгруппа 2
+43	22	Подгруппа 1
+44	22	Подгруппа 2
+45	23	Подгруппа 1
+46	23	Подгруппа 2
+47	24	Подгруппа 1
+48	24	Подгруппа 2
+49	25	Подгруппа 1
+50	25	Подгруппа 2
+51	26	Подгруппа 1
+52	26	Подгруппа 2
+53	27	Подгруппа 1
+54	27	Подгруппа 2
+55	28	Подгруппа 1
+56	28	Подгруппа 2
+57	29	Подгруппа 1
+58	29	Подгруппа 2
+59	30	Подгруппа 1
+60	30	Подгруппа 2
+61	31	Подгруппа 1
+62	31	Подгруппа 2
+63	32	Подгруппа 1
+64	32	Подгруппа 2
+65	33	Подгруппа 1
+66	33	Подгруппа 2
+67	34	Подгруппа 1
+68	34	Подгруппа 2
+69	35	Подгруппа 1
+70	35	Подгруппа 2
+71	36	Подгруппа 1
+72	36	Подгруппа 2
+73	37	Подгруппа 1
+74	37	Подгруппа 2
+75	38	Подгруппа 1
+76	38	Подгруппа 2
+77	39	Подгруппа 1
+78	39	Подгруппа 2
+79	40	Подгруппа 1
+80	40	Подгруппа 2
+81	41	Подгруппа 1
+82	41	Подгруппа 2
+83	42	Подгруппа 1
+84	42	Подгруппа 2
+85	43	Подгруппа 1
+86	43	Подгруппа 2
+87	44	Подгруппа 1
+88	44	Подгруппа 2
+89	45	Подгруппа 1
+90	45	Подгруппа 2
+91	46	Подгруппа 1
+92	46	Подгруппа 2
+93	47	Подгруппа 1
+94	47	Подгруппа 2
+95	48	Подгруппа 1
+96	48	Подгруппа 2
+97	49	Подгруппа 1
+98	49	Подгруппа 2
+99	50	Подгруппа 1
+100	50	Подгруппа 2
+101	51	Подгруппа 1
+102	51	Подгруппа 2
+\.
+
+
+--
+-- Data for Name: subjects; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.subjects (id, name, short_name) FROM stdin;
+1	Қазақ тілі	\N
+2	Қазақ әдебиеті	\N
+3	Орыс тілі және әдебиеті	\N
+4	Шетел тілі (ағылшын)	\N
+5	Қазақстан тарихы	\N
+6	Дүниежүзі тарихы	\N
+7	Математика	\N
+8	Информатика	\N
+9	Физика	\N
+10	Химия	\N
+11	Биология	\N
+12	Графика және жобалау	\N
+13	Алғашқы әскери және технологиялық дайындық	\N
+14	Дене тәрбиесі	\N
+15	География	\N
+16	«Жаһандық құзыреттілік» курсы	\N
+17	Ақпараттық-коммуникациялық және цифрлық технологияларды қолдану	\N
+18	Экономиканың базалық білімін және кәсіпкерлік негіздерін қолдану	\N
+19	Основы экономики	\N
+20	Основы предпринимательства	\N
+21	Основы права	\N
+22	Философия негіздері	\N
+23	Мәдениеттану	\N
+24	Кәсіби орыс тілі	\N
+25	Кәсіби шет тілі	\N
+26	Веб-жобаларды әзірлеу кезінде компьютерлік графика дағдыларын қолдану	\N
+27	Веб-жобалардың визуалды контентін жасау	\N
+28	Макеттерді прототиптеу және беттеу	\N
+29	Применение основных методов алгоритмизации и программирование	\N
+30	Применение принципов объектно-ориентированного программирования	\N
+31	Разработка и администрирование баз данных	\N
+32	Создание и проектирование пользовательских интерфейсов в графических приложениях	\N
+33	Жергілікті желілерді жобалау кезінде желілік технологиялар мен хаттамаларды пайдалану	\N
+34	Әр түрлі серверлік операциялық жүйелерді басқару	\N
+35	Серверлік операциялық жүйелерді орналастыруда виртуалдандыру технологиясы мен бұлтты технологияларды қолдану	\N
+36	Кәсіби қызметте алгоритмдеу мен бағдарламалаудың негізгі әдістерін қолдану	\N
+37	Web-ресурстарды әзірлеу	\N
+38	Web-ресурстар контентін басқару жүйелерін қолдану	\N
+39	Разработка web-ресурсов	\N
+40	Применение систем управления контентом web-ресурсов	\N
+42	Проектирование программного обеспечения	\N
+43	Составление алгоритма и создание блок-схемы на основе спецификации программного обеспечения	\N
+44	Программирование модулей программного обеспечения	\N
+45	Проверка работоспособности рефакторинга программного кода	\N
+46	Организация обработки больших данных	\N
+47	Программирование цифровых устройств на базе микроконтроллеров	\N
+48	Разработка мобильных приложений	\N
+49	Бағдарламалық кодты жобалау және әзірлеу	\N
+50	Деректер қорын әзірлеу және басқару	\N
+51	Микроконтроллер негізінде сандық құрылғыларды бағдарламалау	\N
+52	Мобильді қосымшаларды әзірлеу	\N
+53	Бағдарламалық жасақтаманы әзірлеу мен іске асырудың негізгі экономикалық көрсеткіштерін есептеу	\N
+54	Бағдарламалық өнімдерді әзірлеу жұмыстарын жоспарлауға және ұйымдастыруға қатысу	\N
+56	Технология кондитерского производства	\N
+59	Кондитер өндірісінің технологиясы	\N
+60	Нан өндірісінің технологиясы	\N
+61	Технохимиялық бақылау	\N
+62	Жабдық	\N
+63	Тағам дайындау технологиясы	\N
+64	Саудалық есептеулер	\N
+65	Еңбекті қорғау	\N
+66	Микробиология негіздері	\N
+67	Технология производства пива	\N
+68	Технология производства безалкогольных напитков	\N
+69	Ведение технологических процессов изготовления тортов и пирожных	\N
+70	Ведение технологических процессов производства сдобных хлебобулочных изделий	\N
+71	Нан және тоқаш өнімдерін өндіру	\N
+72	Майқоспалы нан-тоқаш өнімдерін өндіру	\N
+73	Жұмыстарды орындау кезінде санитарлық-технологиялық талаптарды сақтау	\N
+74	Көкөністерден, жармалардан тағамдар дайындау	\N
+75	Балық және теңіз өнімдерінен тағамдар дайындау	\N
+76	Салаттар, жеңіл тағамдар дайындау	\N
+77	Жұмыртқа, сүзбе, қамырдан жасалған тағамдар	\N
+78	Ұлттық тағамдарды дайындау	\N
+79	Банкеттерге қызмет көрсетуді ұйымдастыру	\N
+87	Ведение процессов фильтрации и розлива пива	\N
+88	Ведение технологических процессов производства безалкогольных напитков	\N
+89	Организация и ведение процессов винодельческого производства	\N
+90	Организация и ведение процессов спиртового производства	\N
+92	Қоғамдық тамақтандыру өндірісін ұйымдастыру	\N
+93	Қоғамдық тамақтандыру өндірісін басқару	\N
+95	Макарон өндірісінің технологиялық процестерін ұйымдастыру	\N
+96	Бухгалтерлік есеп негіздері	\N
+97	Қаржылық есеп	\N
+98	Салық және салық салу	\N
+100	1С: Бухгалтерия	\N
+105	Жоғары математика	\N
+106	Кәсіпорын экономикасы	\N
+109	Қаржылық есептілікті талдау	\N
+110	Есеп айырысу операциялары мен меншікті капиталдың есебі	\N
+111	Қаржылық есептілікті жасауға қатысу	\N
+112	Ұйымдардың шаруашылық қызметіне кешенді талдау жүргізу	\N
+113	Ведение учета и аудита расчетных операций	\N
+116	Кредиттік операцияларды жүзеге асыру және рәсімдеу	\N
+\.
+
+
+--
+-- Data for Name: teacher_availabilities; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.teacher_availabilities (id, teacher_id, day_of_week, time_slot_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: teacher_subjects; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.teacher_subjects (id, teacher_id, subject_id, group_id) FROM stdin;
+1	20	1	1
+2	78	3	1
+3	14	3	1
+4	62	4	1
+5	9	4	1
+6	71	5	1
+7	26	7	1
+8	94	8	1
+9	66	8	1
+10	56	9	1
+11	69	10	1
+12	79	14	1
+13	74	14	1
+14	73	26	1
+15	94	26	1
+16	14	3	2
+17	78	3	2
+18	26	7	2
+19	16	14	2
+20	64	14	2
+21	73	26	2
+22	66	26	2
+23	38	1	4
+24	86	1	4
+25	11	7	4
+27	80	63	5
+28	13	7	9
+29	70	19	9
+30	71	15	15
+31	42	12	15
+32	68	14	15
+33	94	17	15
+34	33	27	15
+35	33	28	15
+36	27	28	15
+37	71	15	16
+38	79	14	16
+39	59	27	16
+40	27	28	16
+41	59	28	16
+42	5	14	18
+43	68	14	18
+48	21	29	19
+49	17	29	19
+50	17	31	19
+51	30	31	19
+52	29	59	23
+53	10	59	23
+55	6	96	26
+56	46	96	26
+57	72	100	26
+58	41	100	26
+61	28	37	31
+62	17	37	31
+65	28	46	36
+66	30	46	36
+67	81	69	40
+68	29	69	40
+69	34	71	41
+70	83	74	37
+71	63	74	37
+72	19	87	42
+73	72	110	43
+75	82	116	45
+77	60	49	47
+78	30	50	47
+79	1	92	51
+80	77	93	51
+81	12	93	51
+82	34	95	49
+83	19	89	50
+84	20	1	3
+85	78	3	3
+86	14	3	3
+87	62	4	3
+88	9	4	3
+89	71	5	3
+90	26	7	3
+91	94	8	3
+92	66	8	3
+93	56	9	3
+94	69	10	3
+95	79	14	3
+96	74	14	3
+97	73	26	3
+98	94	26	3
+99	80	63	6
+100	13	7	10
+101	70	19	10
+102	13	7	11
+103	70	19	11
+104	20	1	7
+105	78	3	7
+106	14	3	7
+107	62	4	7
+108	9	4	7
+109	71	5	7
+110	26	7	7
+111	94	8	7
+112	66	8	7
+113	56	9	7
+114	69	10	7
+115	79	14	7
+116	74	14	7
+117	73	26	7
+118	94	26	7
+119	20	1	8
+120	78	3	8
+121	14	3	8
+122	62	4	8
+123	9	4	8
+124	71	5	8
+125	26	7	8
+126	94	8	8
+127	66	8	8
+128	56	9	8
+129	69	10	8
+130	79	14	8
+131	74	14	8
+132	73	26	8
+133	94	26	8
+134	20	1	12
+135	78	3	12
+136	14	3	12
+137	62	4	12
+138	9	4	12
+139	71	5	12
+140	26	7	12
+141	94	8	12
+142	66	8	12
+143	56	9	12
+144	69	10	12
+145	79	14	12
+146	74	14	12
+147	73	26	12
+148	94	26	12
+149	20	1	13
+150	78	3	13
+151	14	3	13
+152	62	4	13
+153	9	4	13
+154	71	5	13
+155	26	7	13
+156	94	8	13
+157	66	8	13
+158	56	9	13
+159	69	10	13
+160	79	14	13
+161	74	14	13
+162	73	26	13
+163	94	26	13
+164	20	1	14
+165	78	3	14
+166	14	3	14
+167	62	4	14
+168	9	4	14
+169	71	5	14
+170	26	7	14
+171	94	8	14
+172	66	8	14
+173	56	9	14
+174	69	10	14
+175	79	14	14
+176	74	14	14
+177	73	26	14
+178	94	26	14
+179	71	15	17
+180	42	12	17
+181	68	14	17
+182	94	17	17
+183	33	27	17
+184	33	28	17
+185	27	28	17
+187	6	96	27
+188	46	96	27
+189	72	100	27
+190	41	100	27
+192	6	96	28
+193	46	96	28
+194	72	100	28
+195	41	100	28
+196	71	15	20
+197	42	12	20
+198	68	14	20
+199	94	17	20
+200	33	27	20
+201	33	28	20
+202	27	28	20
+203	71	15	21
+204	42	12	21
+205	68	14	21
+206	94	17	21
+207	33	27	21
+208	33	28	21
+209	27	28	21
+210	71	15	22
+211	42	12	22
+212	68	14	22
+213	94	17	22
+214	33	27	22
+215	33	28	22
+216	27	28	22
+217	71	15	24
+218	42	12	24
+219	68	14	24
+220	94	17	24
+221	33	27	24
+222	33	28	24
+223	27	28	24
+224	71	15	25
+225	42	12	25
+226	68	14	25
+227	94	17	25
+228	33	27	25
+229	33	28	25
+230	27	28	25
+232	6	96	29
+233	46	96	29
+234	72	100	29
+235	41	100	29
+237	6	96	30
+238	46	96	30
+239	72	100	30
+240	41	100	30
+243	28	37	32
+244	17	37	32
+247	28	37	33
+248	17	37	33
+251	28	37	34
+252	17	37	34
+255	28	37	35
+256	17	37	35
+257	83	74	38
+258	63	74	38
+259	83	74	39
+260	63	74	39
+261	72	110	44
+263	82	116	46
+265	60	49	48
+266	30	50	48
+63	4	40	36
+64	61	40	36
+44	21	33	18
+45	17	33	18
+59	28	36	31
+60	17	36	31
+241	28	36	32
+242	17	36	32
+245	28	36	33
+246	17	36	33
+249	28	36	34
+250	17	36	34
+253	28	36	35
+254	17	36	35
+\.
+
+
+--
+-- Data for Name: teachers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.teachers (id, full_name, employment_type, max_hours_per_week) FROM stdin;
+1	Вакансия	STAFF	\N
+2	Абдуллина Н.Ф.	STAFF	36
+3	Абилдаева Г.А.	STAFF	36
+4	Абишев Н.Е.	STAFF	36
+5	Авакри А.И.	STAFF	36
+6	Адамбаева Ж.С.	STAFF	36
+7	Азизов З.Т.	STAFF	36
+8	Акынова А.А.	STAFF	36
+9	Аликберова Н.А.	STAFF	36
+10	Алгуватова А.Т.	STAFF	36
+11	Алимкулова А.Ю.	STAFF	36
+12	Аманкулова Г.А.	STAFF	36
+13	Атыханов Т.А.	STAFF	36
+14	Ахметжанова Ж.К.	STAFF	36
+15	Аяпбергенова А.Х.	STAFF	36
+16	Бегалиев Н.Ж.	STAFF	36
+17	Бекен А.Д.	STAFF	36
+18	Белгожаева Т.Ш.	STAFF	36
+19	Бидахметов А.К.	STAFF	36
+20	Галпай Ұ.Ә.	STAFF	36
+21	Даукенов М.Е.	STAFF	36
+22	Даулетбаева Ж.Т.	STAFF	36
+23	Деева Ю.В.	STAFF	36
+24	Дәулетқызы А.	STAFF	36
+25	Джаужуреков Б.С.	STAFF	36
+26	Диханбаева Д.Ж.	STAFF	36
+27	Дузбаева К.Т.	STAFF	36
+28	Ерназар П.Г.	STAFF	36
+29	Есеналиева М.Б.	STAFF	36
+30	Есимхан А.Д.	STAFF	36
+31	Естаев Д.Б.	STAFF	36
+32	Жакупова А.С.	STAFF	36
+33	Жанабил Ж.Ж.	STAFF	36
+34	Жеткізгенқызы Г.	STAFF	36
+35	Жолымбекова А.С.	STAFF	36
+36	Жулкашева И.А.	STAFF	36
+37	Жумабаева А.	STAFF	36
+38	Жузбаева Б.А.	STAFF	36
+39	Зинуллина А.Е.	STAFF	36
+40	Ибрагимов Р.Р.	STAFF	36
+41	Ибраимова А.	STAFF	36
+42	Кабымбаева Ж.М.	STAFF	36
+43	Кабдолова А.Қ.	STAFF	36
+45	Кадырова П.Б.	STAFF	36
+46	Кайырбаева Р.Е.	STAFF	36
+47	Калабаева Г.К.	STAFF	36
+48	Кален Ж.М.	STAFF	36
+49	Камабекова Д.О.	STAFF	36
+50	Камалбеков М.К.	STAFF	36
+51	Қарабұзауова Ұ.Е.	STAFF	36
+52	Касымбек Ж.Н.	STAFF	36
+53	Кокеев Н.А.	STAFF	36
+54	Конысбаева Р.М.	STAFF	36
+55	Қуанғалиева Ұ.С.	STAFF	36
+56	Күзенбай Т.М.	STAFF	36
+57	Курмангалиева А.Б.	STAFF	36
+58	Лысенко В.Ю.	STAFF	36
+59	Мамытаев А.Д.	STAFF	36
+60	Мантай Ә.Ш.	STAFF	36
+61	Маратов Д.Е.	STAFF	36
+62	Масягина Н.Г.	STAFF	36
+63	Меделбеков Е.К.	STAFF	36
+64	Муканбеков К.И.	STAFF	36
+65	Мұратова М.М.	STAFF	36
+66	Муталиева А.А.	STAFF	36
+67	Мырзақан Г.Б.	STAFF	36
+68	Мышан А.Б.	STAFF	36
+69	Нариманова А.Ж.	STAFF	36
+70	Ниталиева А.А.	STAFF	36
+71	Нургалиева Н.С.	STAFF	36
+72	Онгарова А.Ж.	STAFF	36
+73	Рахан Ш.К.	STAFF	36
+74	Рахимов А.Ж.	STAFF	36
+75	Сабдалиева А.К.	STAFF	36
+76	Саметова К.Т.	STAFF	36
+77	Сарина С.Г.	STAFF	36
+78	Сардарова З.И.	STAFF	36
+79	Сатан Б.С.	STAFF	36
+80	Сәкен Ә.М.	STAFF	36
+81	Сейтбекова А.К.	STAFF	36
+82	Серікбаева А.Ж.	STAFF	36
+83	Сетербаева Г.М.	STAFF	36
+84	Сқақ М.М.	STAFF	36
+85	Сұлтан Н.С.	STAFF	36
+86	Тайкпанова Д.А.	STAFF	36
+87	Тен И.А.	STAFF	36
+88	Тулеубаева Д.Т.	STAFF	36
+89	Уалиев Н.А.	STAFF	36
+90	Үсенғалиқызы А.	STAFF	36
+91	Халилов К.Т.	STAFF	36
+92	Шоманова Б.К.	STAFF	36
+93	Ынтымак Р.С.	STAFF	36
+94	Юнусова К.А.	STAFF	36
+\.
+
+
+--
+-- Data for Name: time_slots; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.time_slots (id, number, start_time, end_time) FROM stdin;
+1	1	08:00:00	09:30:00
+2	2	09:40:00	11:10:00
+3	3	11:20:00	12:50:00
+4	4	13:10:00	14:40:00
+5	5	14:50:00	16:20:00
+6	6	16:30:00	18:00:00
+7	7	18:10:00	19:40:00
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, username, password_hash, role, teacher_id, full_name) FROM stdin;
+\.
+
+
+--
+-- Name: academic_periods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.academic_periods_id_seq', 1, false);
+
+
+--
+-- Name: academic_years_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.academic_years_id_seq', 1, true);
+
+
+--
+-- Name: classroom_assignments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.classroom_assignments_id_seq', 43, true);
+
+
+--
+-- Name: classrooms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.classrooms_id_seq', 44, true);
+
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.departments_id_seq', 3, true);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.groups_id_seq', 51, true);
+
+
+--
+-- Name: hour_grids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.hour_grids_id_seq', 257, true);
+
+
+--
+-- Name: schedule_entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.schedule_entries_id_seq', 2140, true);
+
+
+--
+-- Name: schedule_versions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.schedule_versions_id_seq', 7, true);
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.semesters_id_seq', 2, true);
+
+
+--
+-- Name: subgroups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.subgroups_id_seq', 102, true);
+
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.subjects_id_seq', 124, true);
+
+
+--
+-- Name: teacher_availabilities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.teacher_availabilities_id_seq', 1, false);
+
+
+--
+-- Name: teacher_subjects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.teacher_subjects_id_seq', 266, true);
+
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.teachers_id_seq', 94, true);
+
+
+--
+-- Name: time_slots_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.time_slots_id_seq', 7, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+
+
+--
+-- Name: academic_periods academic_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_periods
+    ADD CONSTRAINT academic_periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: academic_years academic_years_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_years
+    ADD CONSTRAINT academic_years_name_key UNIQUE (name);
+
+
+--
+-- Name: academic_years academic_years_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_years
+    ADD CONSTRAINT academic_years_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: classroom_assignments classroom_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classroom_assignments
+    ADD CONSTRAINT classroom_assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: classrooms classrooms_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classrooms
+    ADD CONSTRAINT classrooms_name_key UNIQUE (name);
+
+
+--
+-- Name: classrooms classrooms_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classrooms
+    ADD CONSTRAINT classrooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: departments departments_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.departments
+    ADD CONSTRAINT departments_name_key UNIQUE (name);
+
+
+--
+-- Name: departments departments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.departments
+    ADD CONSTRAINT departments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hour_grids hour_grids_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hour_grids
+    ADD CONSTRAINT hour_grids_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_entries schedule_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule_versions schedule_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_versions
+    ADD CONSTRAINT schedule_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: semesters semesters_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.semesters
+    ADD CONSTRAINT semesters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subgroups subgroups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subgroups
+    ADD CONSTRAINT subgroups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subjects subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subjects
+    ADD CONSTRAINT subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teacher_availabilities teacher_availabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_availabilities
+    ADD CONSTRAINT teacher_availabilities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teacher_subjects teacher_subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects
+    ADD CONSTRAINT teacher_subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT teachers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: time_slots time_slots_number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.time_slots
+    ADD CONSTRAINT time_slots_number_key UNIQUE (number);
+
+
+--
+-- Name: time_slots time_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.time_slots
+    ADD CONSTRAINT time_slots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: academic_periods uq_academic_period; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_periods
+    ADD CONSTRAINT uq_academic_period UNIQUE (group_id, semester_id, week_number);
+
+
+--
+-- Name: classroom_assignments uq_classroom_teacher; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classroom_assignments
+    ADD CONSTRAINT uq_classroom_teacher UNIQUE (classroom_id, teacher_id);
+
+
+--
+-- Name: semesters uq_semester_year_number; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.semesters
+    ADD CONSTRAINT uq_semester_year_number UNIQUE (academic_year_id, number);
+
+
+--
+-- Name: teacher_availabilities uq_teacher_avail; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_availabilities
+    ADD CONSTRAINT uq_teacher_avail UNIQUE (teacher_id, day_of_week, time_slot_id);
+
+
+--
+-- Name: teacher_subjects uq_teacher_subject_group; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects
+    ADD CONSTRAINT uq_teacher_subject_group UNIQUE (teacher_id, subject_id, group_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: ix_academic_periods_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_academic_periods_id ON public.academic_periods USING btree (id);
+
+
+--
+-- Name: ix_academic_years_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_academic_years_id ON public.academic_years USING btree (id);
+
+
+--
+-- Name: ix_classroom_assignments_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_classroom_assignments_id ON public.classroom_assignments USING btree (id);
+
+
+--
+-- Name: ix_classrooms_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_classrooms_id ON public.classrooms USING btree (id);
+
+
+--
+-- Name: ix_departments_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_departments_id ON public.departments USING btree (id);
+
+
+--
+-- Name: ix_groups_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_groups_id ON public.groups USING btree (id);
+
+
+--
+-- Name: ix_hour_grids_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_hour_grids_id ON public.hour_grids USING btree (id);
+
+
+--
+-- Name: ix_schedule_entries_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_schedule_entries_id ON public.schedule_entries USING btree (id);
+
+
+--
+-- Name: ix_schedule_versions_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_schedule_versions_id ON public.schedule_versions USING btree (id);
+
+
+--
+-- Name: ix_semesters_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_semesters_id ON public.semesters USING btree (id);
+
+
+--
+-- Name: ix_subgroups_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_subgroups_id ON public.subgroups USING btree (id);
+
+
+--
+-- Name: ix_subjects_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_subjects_id ON public.subjects USING btree (id);
+
+
+--
+-- Name: ix_teacher_availabilities_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_teacher_availabilities_id ON public.teacher_availabilities USING btree (id);
+
+
+--
+-- Name: ix_teacher_subjects_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_teacher_subjects_id ON public.teacher_subjects USING btree (id);
+
+
+--
+-- Name: ix_teachers_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_teachers_id ON public.teachers USING btree (id);
+
+
+--
+-- Name: ix_time_slots_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_time_slots_id ON public.time_slots USING btree (id);
+
+
+--
+-- Name: ix_users_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_users_id ON public.users USING btree (id);
+
+
+--
+-- Name: academic_periods academic_periods_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_periods
+    ADD CONSTRAINT academic_periods_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: academic_periods academic_periods_semester_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.academic_periods
+    ADD CONSTRAINT academic_periods_semester_id_fkey FOREIGN KEY (semester_id) REFERENCES public.semesters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: classroom_assignments classroom_assignments_classroom_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classroom_assignments
+    ADD CONSTRAINT classroom_assignments_classroom_id_fkey FOREIGN KEY (classroom_id) REFERENCES public.classrooms(id) ON DELETE CASCADE;
+
+
+--
+-- Name: classroom_assignments classroom_assignments_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classroom_assignments
+    ADD CONSTRAINT classroom_assignments_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: groups groups_department_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(id) ON DELETE CASCADE;
+
+
+--
+-- Name: hour_grids hour_grids_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hour_grids
+    ADD CONSTRAINT hour_grids_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: hour_grids hour_grids_semester_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hour_grids
+    ADD CONSTRAINT hour_grids_semester_id_fkey FOREIGN KEY (semester_id) REFERENCES public.semesters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: hour_grids hour_grids_subject_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hour_grids
+    ADD CONSTRAINT hour_grids_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subjects(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_entries schedule_entries_classroom_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_classroom_id_fkey FOREIGN KEY (classroom_id) REFERENCES public.classrooms(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_entries schedule_entries_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_entries schedule_entries_subgroup_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_subgroup_id_fkey FOREIGN KEY (subgroup_id) REFERENCES public.subgroups(id) ON DELETE SET NULL;
+
+
+--
+-- Name: schedule_entries schedule_entries_subject_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subjects(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_entries schedule_entries_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_entries schedule_entries_time_slot_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_time_slot_id_fkey FOREIGN KEY (time_slot_id) REFERENCES public.time_slots(id);
+
+
+--
+-- Name: schedule_entries schedule_entries_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_entries
+    ADD CONSTRAINT schedule_entries_version_id_fkey FOREIGN KEY (version_id) REFERENCES public.schedule_versions(id) ON DELETE CASCADE;
+
+
+--
+-- Name: schedule_versions schedule_versions_semester_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schedule_versions
+    ADD CONSTRAINT schedule_versions_semester_id_fkey FOREIGN KEY (semester_id) REFERENCES public.semesters(id) ON DELETE CASCADE;
+
+
+--
+-- Name: semesters semesters_academic_year_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.semesters
+    ADD CONSTRAINT semesters_academic_year_id_fkey FOREIGN KEY (academic_year_id) REFERENCES public.academic_years(id) ON DELETE CASCADE;
+
+
+--
+-- Name: subgroups subgroups_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subgroups
+    ADD CONSTRAINT subgroups_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: teacher_availabilities teacher_availabilities_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_availabilities
+    ADD CONSTRAINT teacher_availabilities_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: teacher_availabilities teacher_availabilities_time_slot_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_availabilities
+    ADD CONSTRAINT teacher_availabilities_time_slot_id_fkey FOREIGN KEY (time_slot_id) REFERENCES public.time_slots(id);
+
+
+--
+-- Name: teacher_subjects teacher_subjects_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects
+    ADD CONSTRAINT teacher_subjects_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: teacher_subjects teacher_subjects_subject_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects
+    ADD CONSTRAINT teacher_subjects_subject_id_fkey FOREIGN KEY (subject_id) REFERENCES public.subjects(id) ON DELETE CASCADE;
+
+
+--
+-- Name: teacher_subjects teacher_subjects_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teacher_subjects
+    ADD CONSTRAINT teacher_subjects_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: users users_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id) ON DELETE SET NULL;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict nbiDBKES8EqVXc2Z9z3OPxgl7t8xfHx2GFxVccGMYp8siAZWhfPDaFvcIq5Dv90
+

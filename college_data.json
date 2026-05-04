@@ -1,0 +1,1180 @@
+{
+  "subjects": [
+    {
+      "id": "s1",
+      "name": "Высшая математика",
+      "type": "lecture"
+    },
+    {
+      "id": "s2",
+      "name": "Физика",
+      "type": "lecture"
+    },
+    {
+      "id": "s3",
+      "name": "Основы алгоритмизации",
+      "type": "practice"
+    },
+    {
+      "id": "s4",
+      "name": "Базы данных (SQL)",
+      "type": "practice"
+    },
+    {
+      "id": "s5",
+      "name": "Веб-разработка",
+      "type": "practice"
+    },
+    {
+      "id": "s6",
+      "name": "История",
+      "type": "lecture"
+    },
+    {
+      "id": "s7",
+      "name": "Английский язык",
+      "type": "practice"
+    },
+    {
+      "id": "s8",
+      "name": "Физкультура",
+      "type": "sport"
+    },
+    {
+      "id": "s9",
+      "name": "Операционные системы",
+      "type": "practice"
+    },
+    {
+      "id": "s10",
+      "name": "Компьютерные сети",
+      "type": "practice"
+    },
+    {
+      "id": "s11",
+      "name": "Философия",
+      "type": "lecture"
+    },
+    {
+      "id": "s12",
+      "name": "Информационная безопасность",
+      "type": "practice"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "name": "ИС-24-1",
+      "course": 2,
+      "students_count": 20
+    },
+    {
+      "id": "g2",
+      "name": "СЕТИ-22-1",
+      "course": 4,
+      "students_count": 16
+    },
+    {
+      "id": "g3",
+      "name": "ПРОГ-25-1",
+      "course": 1,
+      "students_count": 17
+    },
+    {
+      "id": "g4",
+      "name": "ВЕБ-22-1",
+      "course": 4,
+      "students_count": 21
+    },
+    {
+      "id": "g5",
+      "name": "ИС-22-3",
+      "course": 4,
+      "students_count": 29
+    },
+    {
+      "id": "g6",
+      "name": "БД-25-2",
+      "course": 1,
+      "students_count": 21
+    },
+    {
+      "id": "g7",
+      "name": "ИС-24-2",
+      "course": 2,
+      "students_count": 16
+    },
+    {
+      "id": "g8",
+      "name": "СЕТИ-23-3",
+      "course": 3,
+      "students_count": 24
+    },
+    {
+      "id": "g9",
+      "name": "ВЕБ-25-1",
+      "course": 1,
+      "students_count": 22
+    },
+    {
+      "id": "g10",
+      "name": "ИС-24-2",
+      "course": 2,
+      "students_count": 22
+    },
+    {
+      "id": "g11",
+      "name": "БД-23-3",
+      "course": 3,
+      "students_count": 17
+    },
+    {
+      "id": "g12",
+      "name": "БД-23-1",
+      "course": 3,
+      "students_count": 24
+    },
+    {
+      "id": "g13",
+      "name": "СЕТИ-24-1",
+      "course": 2,
+      "students_count": 26
+    },
+    {
+      "id": "g14",
+      "name": "ПРОГ-25-3",
+      "course": 1,
+      "students_count": 24
+    },
+    {
+      "id": "g15",
+      "name": "ИС-25-1",
+      "course": 1,
+      "students_count": 28
+    },
+    {
+      "id": "g16",
+      "name": "ИС-24-2",
+      "course": 2,
+      "students_count": 19
+    },
+    {
+      "id": "g17",
+      "name": "СЕТИ-25-3",
+      "course": 1,
+      "students_count": 17
+    },
+    {
+      "id": "g18",
+      "name": "СЕТИ-25-3",
+      "course": 1,
+      "students_count": 30
+    },
+    {
+      "id": "g19",
+      "name": "ВЕБ-23-1",
+      "course": 3,
+      "students_count": 30
+    },
+    {
+      "id": "g20",
+      "name": "СЕТИ-23-3",
+      "course": 3,
+      "students_count": 27
+    },
+    {
+      "id": "g21",
+      "name": "ПРОГ-22-2",
+      "course": 4,
+      "students_count": 18
+    },
+    {
+      "id": "g22",
+      "name": "ВЕБ-23-3",
+      "course": 3,
+      "students_count": 22
+    },
+    {
+      "id": "g23",
+      "name": "БД-25-3",
+      "course": 1,
+      "students_count": 26
+    },
+    {
+      "id": "g24",
+      "name": "ВЕБ-23-3",
+      "course": 3,
+      "students_count": 19
+    },
+    {
+      "id": "g25",
+      "name": "ПРОГ-24-2",
+      "course": 2,
+      "students_count": 17
+    },
+    {
+      "id": "g26",
+      "name": "ИС-25-1",
+      "course": 1,
+      "students_count": 23
+    },
+    {
+      "id": "g27",
+      "name": "ВЕБ-22-3",
+      "course": 4,
+      "students_count": 17
+    },
+    {
+      "id": "g28",
+      "name": "БД-22-2",
+      "course": 4,
+      "students_count": 30
+    },
+    {
+      "id": "g29",
+      "name": "БД-24-1",
+      "course": 2,
+      "students_count": 20
+    },
+    {
+      "id": "g30",
+      "name": "ВЕБ-25-1",
+      "course": 1,
+      "students_count": 28
+    }
+  ],
+  "teachers": [
+    {
+      "id": "t1",
+      "name": "Попов М.М.",
+      "specialty": "Физкультура",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t2",
+      "name": "Смирнов И.И.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t3",
+      "name": "Фёдоров Е.Е.",
+      "specialty": "Основы алгоритмизации",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t4",
+      "name": "Смирнов Д.Д.",
+      "specialty": "Высшая математика",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t5",
+      "name": "Захаров И.И.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t6",
+      "name": "Волков Д.Д.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t7",
+      "name": "Волков Н.Н.",
+      "specialty": "Английский язык",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t8",
+      "name": "Смирнов И.И.",
+      "specialty": "История",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t9",
+      "name": "Лебедев М.М.",
+      "specialty": "История",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t10",
+      "name": "Николаев В.В.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t11",
+      "name": "Захаров И.И.",
+      "specialty": "Высшая математика",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t12",
+      "name": "Егоров Д.Д.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t13",
+      "name": "Степанов М.М.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t14",
+      "name": "Соколов И.И.",
+      "specialty": "Высшая математика",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t15",
+      "name": "Смирнов И.И.",
+      "specialty": "Базы данных (SQL)",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t16",
+      "name": "Васильев Н.Н.",
+      "specialty": "Базы данных (SQL)",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t17",
+      "name": "Никитин А.А.",
+      "specialty": "Английский язык",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t18",
+      "name": "Петров О.О.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t19",
+      "name": "Попов В.В.",
+      "specialty": "Базы данных (SQL)",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t20",
+      "name": "Лебедев И.И.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t21",
+      "name": "Никитин Е.Е.",
+      "specialty": "Физика",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t22",
+      "name": "Кузнецов С.С.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t23",
+      "name": "Захаров М.М.",
+      "specialty": "Основы алгоритмизации",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t24",
+      "name": "Михайлов М.М.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t25",
+      "name": "Иванов С.С.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t26",
+      "name": "Новиков С.С.",
+      "specialty": "Физкультура",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t27",
+      "name": "Орлов С.С.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t28",
+      "name": "Соколов Е.Е.",
+      "specialty": "Базы данных (SQL)",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t29",
+      "name": "Егоров М.М.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t30",
+      "name": "Захаров О.О.",
+      "specialty": "Физкультура",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t31",
+      "name": "Петров С.С.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t32",
+      "name": "Егоров В.В.",
+      "specialty": "Английский язык",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t33",
+      "name": "Степанов О.О.",
+      "specialty": "Компьютерные сети",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t34",
+      "name": "Орлов И.И.",
+      "specialty": "Информационная безопасность",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t35",
+      "name": "Волков Н.Н.",
+      "specialty": "Физкультура",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t36",
+      "name": "Никитин С.С.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t37",
+      "name": "Орлов Е.Е.",
+      "specialty": "Физика",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t38",
+      "name": "Волков П.П.",
+      "specialty": "Информационная безопасность",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t39",
+      "name": "Петров Д.Д.",
+      "specialty": "Компьютерные сети",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t40",
+      "name": "Петров Н.Н.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t41",
+      "name": "Иванов С.С.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t42",
+      "name": "Попов Е.Е.",
+      "specialty": "Высшая математика",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t43",
+      "name": "Захаров П.П.",
+      "specialty": "Философия",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t44",
+      "name": "Степанов М.М.",
+      "specialty": "Английский язык",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t45",
+      "name": "Михайлов М.М.",
+      "specialty": "Основы алгоритмизации",
+      "max_pairs_per_week": 15
+    },
+    {
+      "id": "t46",
+      "name": "Волков Н.Н.",
+      "specialty": "Английский язык",
+      "max_pairs_per_week": 18
+    },
+    {
+      "id": "t47",
+      "name": "Морозов В.В.",
+      "specialty": "Операционные системы",
+      "max_pairs_per_week": 20
+    },
+    {
+      "id": "t48",
+      "name": "Андреев Д.Д.",
+      "specialty": "История",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t49",
+      "name": "Лебедев Е.Е.",
+      "specialty": "Веб-разработка",
+      "max_pairs_per_week": 12
+    },
+    {
+      "id": "t50",
+      "name": "Новиков О.О.",
+      "specialty": "Физкультура",
+      "max_pairs_per_week": 18
+    }
+  ],
+  "curriculum": [
+    {
+      "group_id": "g1",
+      "subject_id": "s1",
+      "teacher_id": "t11",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g1",
+      "subject_id": "s7",
+      "teacher_id": "t17",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g1",
+      "subject_id": "s3",
+      "teacher_id": "t45",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g1",
+      "subject_id": "s9",
+      "teacher_id": "t47",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g2",
+      "subject_id": "s4",
+      "teacher_id": "t28",
+      "pairs_per_week": 10
+    },
+    {
+      "group_id": "g2",
+      "subject_id": "s5",
+      "teacher_id": "t49",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g2",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g3",
+      "subject_id": "s1",
+      "teacher_id": "t4",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g3",
+      "subject_id": "s2",
+      "teacher_id": "t21",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g3",
+      "subject_id": "s6",
+      "teacher_id": "t48",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g3",
+      "subject_id": "s11",
+      "teacher_id": "t27",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g4",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g4",
+      "subject_id": "s5",
+      "teacher_id": "t13",
+      "pairs_per_week": 9
+    },
+    {
+      "group_id": "g4",
+      "subject_id": "s12",
+      "teacher_id": "t34",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g5",
+      "subject_id": "s4",
+      "teacher_id": "t15",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g5",
+      "subject_id": "s10",
+      "teacher_id": "t39",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g5",
+      "subject_id": "s12",
+      "teacher_id": "t34",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g5",
+      "subject_id": "s5",
+      "teacher_id": "t2",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g6",
+      "subject_id": "s8",
+      "teacher_id": "t30",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g6",
+      "subject_id": "s11",
+      "teacher_id": "t6",
+      "pairs_per_week": 10
+    },
+    {
+      "group_id": "g6",
+      "subject_id": "s1",
+      "teacher_id": "t42",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g7",
+      "subject_id": "s7",
+      "teacher_id": "t44",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g7",
+      "subject_id": "s1",
+      "teacher_id": "t14",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g7",
+      "subject_id": "s8",
+      "teacher_id": "t1",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g7",
+      "subject_id": "s9",
+      "teacher_id": "t29",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g8",
+      "subject_id": "s4",
+      "teacher_id": "t19",
+      "pairs_per_week": 12
+    },
+    {
+      "group_id": "g8",
+      "subject_id": "s5",
+      "teacher_id": "t2",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g8",
+      "subject_id": "s10",
+      "teacher_id": "t39",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g9",
+      "subject_id": "s11",
+      "teacher_id": "t41",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g9",
+      "subject_id": "s2",
+      "teacher_id": "t37",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g9",
+      "subject_id": "s6",
+      "teacher_id": "t9",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g9",
+      "subject_id": "s8",
+      "teacher_id": "t30",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g10",
+      "subject_id": "s8",
+      "teacher_id": "t30",
+      "pairs_per_week": 11
+    },
+    {
+      "group_id": "g10",
+      "subject_id": "s7",
+      "teacher_id": "t32",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g10",
+      "subject_id": "s9",
+      "teacher_id": "t29",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g11",
+      "subject_id": "s5",
+      "teacher_id": "t13",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g11",
+      "subject_id": "s4",
+      "teacher_id": "t16",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g11",
+      "subject_id": "s7",
+      "teacher_id": "t46",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g11",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 1
+    },
+    {
+      "group_id": "g12",
+      "subject_id": "s7",
+      "teacher_id": "t32",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g12",
+      "subject_id": "s5",
+      "teacher_id": "t36",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g12",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g12",
+      "subject_id": "s4",
+      "teacher_id": "t19",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g13",
+      "subject_id": "s1",
+      "teacher_id": "t42",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g13",
+      "subject_id": "s8",
+      "teacher_id": "t30",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g13",
+      "subject_id": "s3",
+      "teacher_id": "t23",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g13",
+      "subject_id": "s9",
+      "teacher_id": "t29",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g14",
+      "subject_id": "s8",
+      "teacher_id": "t26",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g14",
+      "subject_id": "s1",
+      "teacher_id": "t42",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g14",
+      "subject_id": "s11",
+      "teacher_id": "t5",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g14",
+      "subject_id": "s6",
+      "teacher_id": "t48",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g15",
+      "subject_id": "s1",
+      "teacher_id": "t42",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g15",
+      "subject_id": "s11",
+      "teacher_id": "t31",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g15",
+      "subject_id": "s8",
+      "teacher_id": "t50",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g15",
+      "subject_id": "s2",
+      "teacher_id": "t21",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g16",
+      "subject_id": "s7",
+      "teacher_id": "t44",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g16",
+      "subject_id": "s9",
+      "teacher_id": "t47",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g16",
+      "subject_id": "s1",
+      "teacher_id": "t4",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g16",
+      "subject_id": "s3",
+      "teacher_id": "t23",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g16",
+      "subject_id": "s8",
+      "teacher_id": "t1",
+      "pairs_per_week": 1
+    },
+    {
+      "group_id": "g17",
+      "subject_id": "s11",
+      "teacher_id": "t5",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g17",
+      "subject_id": "s2",
+      "teacher_id": "t21",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g17",
+      "subject_id": "s8",
+      "teacher_id": "t1",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g17",
+      "subject_id": "s6",
+      "teacher_id": "t8",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g18",
+      "subject_id": "s2",
+      "teacher_id": "t37",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g18",
+      "subject_id": "s11",
+      "teacher_id": "t31",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g18",
+      "subject_id": "s8",
+      "teacher_id": "t50",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g18",
+      "subject_id": "s1",
+      "teacher_id": "t11",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g19",
+      "subject_id": "s7",
+      "teacher_id": "t46",
+      "pairs_per_week": 12
+    },
+    {
+      "group_id": "g19",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g19",
+      "subject_id": "s4",
+      "teacher_id": "t28",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g20",
+      "subject_id": "s4",
+      "teacher_id": "t19",
+      "pairs_per_week": 9
+    },
+    {
+      "group_id": "g20",
+      "subject_id": "s7",
+      "teacher_id": "t17",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g20",
+      "subject_id": "s5",
+      "teacher_id": "t2",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g20",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 1
+    },
+    {
+      "group_id": "g21",
+      "subject_id": "s10",
+      "teacher_id": "t39",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g21",
+      "subject_id": "s4",
+      "teacher_id": "t15",
+      "pairs_per_week": 11
+    },
+    {
+      "group_id": "g21",
+      "subject_id": "s5",
+      "teacher_id": "t13",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g22",
+      "subject_id": "s5",
+      "teacher_id": "t40",
+      "pairs_per_week": 9
+    },
+    {
+      "group_id": "g22",
+      "subject_id": "s7",
+      "teacher_id": "t17",
+      "pairs_per_week": 9
+    },
+    {
+      "group_id": "g23",
+      "subject_id": "s8",
+      "teacher_id": "t35",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g23",
+      "subject_id": "s11",
+      "teacher_id": "t43",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g23",
+      "subject_id": "s1",
+      "teacher_id": "t4",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g24",
+      "subject_id": "s7",
+      "teacher_id": "t17",
+      "pairs_per_week": 6
+    },
+    {
+      "group_id": "g24",
+      "subject_id": "s5",
+      "teacher_id": "t13",
+      "pairs_per_week": 11
+    },
+    {
+      "group_id": "g24",
+      "subject_id": "s4",
+      "teacher_id": "t28",
+      "pairs_per_week": 1
+    },
+    {
+      "group_id": "g25",
+      "subject_id": "s3",
+      "teacher_id": "t23",
+      "pairs_per_week": 5
+    },
+    {
+      "group_id": "g25",
+      "subject_id": "s8",
+      "teacher_id": "t30",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g25",
+      "subject_id": "s7",
+      "teacher_id": "t17",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g25",
+      "subject_id": "s9",
+      "teacher_id": "t24",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g26",
+      "subject_id": "s11",
+      "teacher_id": "t22",
+      "pairs_per_week": 15
+    },
+    {
+      "group_id": "g26",
+      "subject_id": "s6",
+      "teacher_id": "t48",
+      "pairs_per_week": 1
+    },
+    {
+      "group_id": "g26",
+      "subject_id": "s1",
+      "teacher_id": "t11",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g27",
+      "subject_id": "s5",
+      "teacher_id": "t36",
+      "pairs_per_week": 15
+    },
+    {
+      "group_id": "g27",
+      "subject_id": "s12",
+      "teacher_id": "t34",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g28",
+      "subject_id": "s12",
+      "teacher_id": "t34",
+      "pairs_per_week": 8
+    },
+    {
+      "group_id": "g28",
+      "subject_id": "s5",
+      "teacher_id": "t36",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g28",
+      "subject_id": "s10",
+      "teacher_id": "t33",
+      "pairs_per_week": 3
+    },
+    {
+      "group_id": "g29",
+      "subject_id": "s1",
+      "teacher_id": "t11",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g29",
+      "subject_id": "s9",
+      "teacher_id": "t18",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g29",
+      "subject_id": "s3",
+      "teacher_id": "t3",
+      "pairs_per_week": 10
+    },
+    {
+      "group_id": "g29",
+      "subject_id": "s8",
+      "teacher_id": "t35",
+      "pairs_per_week": 2
+    },
+    {
+      "group_id": "g30",
+      "subject_id": "s11",
+      "teacher_id": "t41",
+      "pairs_per_week": 4
+    },
+    {
+      "group_id": "g30",
+      "subject_id": "s8",
+      "teacher_id": "t26",
+      "pairs_per_week": 7
+    },
+    {
+      "group_id": "g30",
+      "subject_id": "s6",
+      "teacher_id": "t9",
+      "pairs_per_week": 7
+    }
+  ]
+}

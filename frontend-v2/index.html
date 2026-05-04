@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="scheduleSYS — Система управления расписанием колледжа. Просмотр актуального расписания занятий для студентов и преподавателей." />
+  <title>scheduleSYS — Расписание колледжа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/design-tokens.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Skip link for accessibility -->
+  <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
+  <!-- App shell -->
+  <div id="app" class="app-shell">
+
+    <!-- ========== LOGIN PAGE ========== -->
+    <div id="page-login" class="page page-auth active">
+      <div class="auth-container">
+        <div class="auth-card glass-card">
+          <div class="auth-logo">
+            <div class="logo-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect width="32" height="32" rx="10" fill="url(#logoGrad)"/>
+                <path d="M8 10h16M8 16h10M8 22h13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <defs>
+                  <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#6366f1"/>
+                    <stop offset="1" stop-color="#8b5cf6"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div>
+              <h1 class="auth-title">scheduleSYS</h1>
+              <p class="auth-subtitle">Система управления расписанием</p>
+            </div>
+          </div>
+
+          <div class="tab-switcher" role="tablist" aria-label="Вход или регистрация">
+            <button id="tab-login" class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-login" onclick="switchTab('login')">Вход</button>
+            <button id="tab-register" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-register" onclick="switchTab('register')">Регистрация</button>
+          </div>
+
+          <!-- Login Panel -->
+          <div id="panel-login" class="tab-panel active" role="tabpanel">
+            <form id="form-login" novalidate>
+              <div class="form-group">
+                <label for="login-iin" class="form-label">ИИН <span class="required" aria-label="обязательное поле">*</span></label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill="currentColor"/>
+                  </svg>
+                  <input id="login-iin" type="text" class="form-input" placeholder="123456789012" maxlength="12" inputmode="numeric" autocomplete="username" required aria-describedby="login-iin-error" />
+                </div>
+                <span id="login-iin-error" class="field-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="login-password" class="form-label">Пароль <span class="required" aria-label="обязательное поле">*</span></label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" fill="currentColor"/>
+                  </svg>
+                  <input id="login-password" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required aria-describedby="login-password-error" />
+                  <button type="button" class="toggle-password" aria-label="Показать пароль" onclick="togglePassword('login-password', this)">
+                    <svg class="eye-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-2a3 3 0 100-6 3 3 0 000 6z" fill="currentColor"/></svg>
+                  </button>
+                </div>
+                <span id="login-password-error" class="field-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div id="login-error" class="form-alert form-alert--error" role="alert" aria-live="assertive" hidden></div>
+
+              <button type="submit" id="btn-login" class="btn btn-primary btn-full">
+                <span class="btn-text">Войти</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+
+              <a href="/" class="link-muted text-center mt-16 d-block">Смотреть расписание без входа →</a>
+            </form>
+          </div>
+
+          <!-- Register Panel -->
+          <div id="panel-register" class="tab-panel" role="tabpanel" hidden>
+            <form id="form-register" novalidate>
+              <div class="form-group">
+                <label for="reg-iin" class="form-label">ИИН <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill="currentColor"/></svg>
+                  <input id="reg-iin" type="text" class="form-input" placeholder="123456789012" maxlength="12" inputmode="numeric" autocomplete="username" required aria-describedby="reg-iin-error" />
+                </div>
+                <span id="reg-iin-error" class="field-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-name" class="form-label">ФИО <span class="required">*</span></label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" fill="currentColor"/></svg>
+                  <input id="reg-name" type="text" class="form-input" placeholder="Иванов Иван Иванович" autocomplete="name" required aria-describedby="reg-name-error" />
+                </div>
+                <span id="reg-name-error" class="field-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-role" class="form-label">Роль</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <select id="reg-role" class="form-input form-select">
+                    <option value="студент">Студент</option>
+                    <option value="преподаватель">Преподаватель</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="reg-group-wrapper" class="form-group">
+                <label for="reg-group" class="form-label">Группа</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-1a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v1h-3zM4.75 12.094A5.973 5.973 0 004 15v1H1v-1a3 3 0 013.75-2.906z" fill="currentColor"/></svg>
+                  <select id="reg-group" class="form-input form-select">
+                    <option value="">— Загрузка... —</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="reg-error" class="form-alert form-alert--error" role="alert" aria-live="assertive" hidden></div>
+              <div id="reg-success" class="form-alert form-alert--success" role="status" aria-live="polite" hidden></div>
+
+              <button type="submit" id="btn-register" class="btn btn-primary btn-full">
+                <span class="btn-text">Зарегистрироваться</span>
+                <span class="btn-spinner hidden" aria-hidden="true"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <p class="auth-footer">Публичное расписание доступно <a href="/" class="link-accent">без входа в систему</a></p>
+      </div>
+    </div>
+
+    <!-- ========== PUBLIC SCHEDULE ========== -->
+    <div id="page-public" class="page" hidden>
+      <!-- Top navbar -->
+      <header class="navbar glass-nav" role="banner">
+        <div class="navbar-inner container">
+          <a href="/" class="nav-brand" aria-label="scheduleSYS — на главную">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)"/>
+              <path d="M8 10h16M8 16h10M8 22h13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+              <defs><linearGradient id="navLogoGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+            </svg>
+            <span class="nav-brand-name">scheduleSYS</span>
+          </a>
+
+          <nav class="nav-links" role="navigation" aria-label="Основная навигация">
+            <a href="/" id="nav-schedule" class="nav-link active" aria-current="page">Расписание</a>
+            <a href="/classrooms.html" id="nav-classrooms" class="nav-link">Аудитории</a>
+          </nav>
+
+          <div class="nav-actions">
+            <div id="nav-user-area">
+              <a href="/login.html" class="btn btn-ghost btn-sm">Войти</a>
+              <a href="/dashboard.html" id="nav-dashboard-btn" class="btn btn-primary btn-sm" hidden>
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                Панель
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="main-content" class="main-content container">
+
+        <!-- Hero section -->
+        <section class="hero" aria-labelledby="hero-title">
+          <h1 id="hero-title" class="hero-title">Расписание занятий</h1>
+          <p class="hero-subtitle">Актуальное расписание для студентов и преподавателей</p>
+        </section>
+
+        <!-- Filter bar -->
+        <div class="filter-bar glass-card" role="search" aria-label="Фильтры расписания">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="filter-version" class="filter-label">Версия расписания</label>
+              <select id="filter-version" class="filter-select" aria-label="Выберите версию расписания">
+                <option value="">Загрузка...</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-group" class="filter-label">Группа</label>
+              <select id="filter-group" class="filter-select" aria-label="Выберите группу">
+                <option value="">Все группы</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-week" class="filter-label">Неделя</label>
+              <select id="filter-week" class="filter-select" aria-label="Тип недели">
+                <option value="">Все недели</option>
+                <option value="чётная">Чётная</option>
+                <option value="нечётная">Нечётная</option>
+              </select>
+            </div>
+            <button id="btn-load-schedule" class="btn btn-primary" aria-label="Загрузить расписание">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+              Загрузить
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule grid -->
+        <div id="schedule-container" class="schedule-container" aria-live="polite" aria-atomic="true">
+          <div class="schedule-empty">
+            <div class="empty-icon" aria-hidden="true">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="empty-title">Выберите группу и загрузите расписание</p>
+            <p class="empty-desc">Выберите версию расписания и группу, затем нажмите «Загрузить»</p>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="footer" role="contentinfo">
+        <div class="container">
+          <p>© 2025 scheduleSYS — Система управления расписанием</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ========== DASHBOARD (authenticated) ========== -->
+    <div id="page-dashboard" class="page page-with-sidebar" hidden>
+
+      <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar glass-sidebar" role="navigation" aria-label="Боковая навигация">
+        <div class="sidebar-header">
+          <a href="/dashboard.html" class="nav-brand" aria-label="На главную">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect width="32" height="32" rx="10" fill="url(#sideLogoGrad)"/>
+              <path d="M8 10h16M8 16h10M8 22h13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+              <defs><linearGradient id="sideLogoGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+            </svg>
+            <span class="nav-brand-name">scheduleSYS</span>
+          </a>
+          <button id="sidebar-close" class="sidebar-close" aria-label="Закрыть меню" hidden>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Разделы системы">
+          <div id="nav-admin-section" class="nav-section" hidden>
+            <span class="nav-section-label">Управление</span>
+            <a href="/dashboard.html" class="sidebar-link" data-page="home">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+              Главная
+            </a>
+            <a href="/admin-schedule.html" class="sidebar-link" data-page="schedule">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"/></svg>
+              Расписание
+            </a>
+            <a href="/groups.html" class="sidebar-link" data-page="groups">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1z"/></svg>
+              Группы
+            </a>
+            <a href="/teachers.html" class="sidebar-link" data-page="teachers">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+              Преподаватели
+            </a>
+            <a href="/classrooms-admin.html" class="sidebar-link" data-page="classrooms">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg>
+              Аудитории
+            </a>
+            <a href="/reports.html" class="sidebar-link" data-page="reports">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+              Отчёты
+            </a>
+          </div>
+
+          <div id="nav-student-section" class="nav-section" hidden>
+            <span class="nav-section-label">Студент</span>
+            <a href="/my-schedule.html" class="sidebar-link" data-page="my-schedule">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+              Моё расписание
+            </a>
+          </div>
+
+          <div id="nav-teacher-section" class="nav-section" hidden>
+            <span class="nav-section-label">Преподаватель</span>
+            <a href="/my-schedule.html" class="sidebar-link" data-page="my-schedule">
+              <svg class="sidebar-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+              Моё расписание
+            </a>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-card glass-card-xs">
+            <div class="user-avatar" id="sidebar-avatar" aria-hidden="true">А</div>
+            <div class="user-info">
+              <span id="sidebar-username" class="user-name">Пользователь</span>
+              <span id="sidebar-role" class="user-role">Роль</span>
+            </div>
+            <button class="btn-icon logout-btn" aria-label="Выйти из системы" id="btn-logout">
+              <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main dashboard area -->
+      <div class="dashboard-body">
+        <header class="dash-header" role="banner">
+          <button id="sidebar-toggle" class="btn-icon sidebar-toggle-btn" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+          </button>
+          <h2 id="dash-page-title" class="dash-title">Обзор</h2>
+          <div id="dash-header-actions" class="dash-actions"></div>
+        </header>
+
+        <main id="dash-content" class="dash-content" aria-live="polite">
+          <!-- Stats cards -->
+          <div id="stats-grid" class="stats-grid" hidden>
+            <div class="stat-card glass-card" data-stat="groups">
+              <div class="stat-icon stat-icon--purple" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1z"/></svg>
+              </div>
+              <div class="stat-body">
+                <span id="stat-groups" class="stat-value">—</span>
+                <span class="stat-label">Групп</span>
+              </div>
+            </div>
+            <div class="stat-card glass-card" data-stat="teachers">
+              <div class="stat-icon stat-icon--indigo" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+              </div>
+              <div class="stat-body">
+                <span id="stat-teachers" class="stat-value">—</span>
+                <span class="stat-label">Преподавателей</span>
+              </div>
+            </div>
+            <div class="stat-card glass-card" data-stat="classrooms">
+              <div class="stat-icon stat-icon--violet" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4z" clip-rule="evenodd"/></svg>
+              </div>
+              <div class="stat-body">
+                <span id="stat-classrooms" class="stat-value">—</span>
+                <span class="stat-label">Аудиторий</span>
+              </div>
+            </div>
+            <div class="stat-card glass-card" data-stat="subjects">
+              <div class="stat-icon stat-icon--fuchsia" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+              </div>
+              <div class="stat-body">
+                <span id="stat-subjects" class="stat-value">—</span>
+                <span class="stat-label">Дисциплин</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic content area -->
+          <div id="dynamic-content"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Global toast -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  </div><!-- /app -->
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

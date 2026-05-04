@@ -1,0 +1,10 @@
+﻿python :   File "<string>", line 87
+строка:1 знак:1
++ python -u -W ignore -c "
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  File "<string>", line 87:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    print(f'  Group: {g[" name\]}')
+                                  ^
+SyntaxError: f-string expression part cannot include a backslash
