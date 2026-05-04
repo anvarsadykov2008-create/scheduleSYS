@@ -160,7 +160,12 @@ async def login_for_access_token(
 ):
     # [FIX B-05] print заменён на logging
     username = form_data.username.strip()
-    user = db.query(User).filter(User.username == username).first()
+    try:
+        user = db.query(User).filter(User.username == username).first()
+    except Exception as e:
+        import traceback
+        logger.error(f"DB Error: {e}\n{traceback.format_exc()}")
+        raise HTTPException(status_code=400, detail=f"Database error: {str(e)}")
 
     if not user or not verify_password(form_data.password, user.password_hash):
         # Единственное сообщение для обоих случаев — не раскрываем, что именно неверно
