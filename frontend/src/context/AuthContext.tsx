@@ -57,11 +57,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     form.append('username', username);
     form.append('password', password);
 
-    const response = await fetch(`${API_URL}/auth/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: form.toString(),
-    });
+    let response;
+    try {
+      response = await fetch(`${API_URL}/auth/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString(),
+      });
+    } catch (err: any) {
+      throw new Error(`Ошибка сети (${API_URL}): ${err.message}`);
+    }
 
     if (!response.ok) {
       const errBody = await response.json().catch(() => ({}));
