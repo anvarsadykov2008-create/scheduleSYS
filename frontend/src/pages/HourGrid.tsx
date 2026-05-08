@@ -228,7 +228,7 @@ export default function HourGrid() {
           <option value="">— группа из файла —</option>
           {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
         </select>
-        <label className={`cursor-pointer text-sm px-3 py-1.5 rounded bg-museum-primary text-white hover:opacity-90 transition ${importing ? 'opacity-60 pointer-events-none' : ''}`}>
+        <label className={`cursor-pointer text-sm px-3 py-1.5 rounded bg-museum-accent text-white hover:opacity-90 transition ${importing ? 'opacity-60 pointer-events-none' : ''}`}>
           {importing ? 'Загрузка...' : 'Выбрать файл'}
           <input ref={fileRef} type="file" accept=".docx,.xls,.xlsx" className="hidden" onChange={handleImport} />
         </label>
