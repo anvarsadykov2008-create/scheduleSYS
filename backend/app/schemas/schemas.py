@@ -60,9 +60,9 @@ class TeacherBase(BaseModel):
     last_name: str
     first_name: str
     middle_name: Optional[str] = None
-    home_room_id: Optional[int] = None
-    is_head_of_department: bool = False
-    department_id: Optional[int] = None
+    notes: Optional[str] = None
+    default_weekly_hour_limit: Optional[float] = None
+    default_daily_lessons_limit: Optional[int] = None
 
 class TeacherCreate(TeacherBase):
     pass
@@ -71,9 +71,9 @@ class TeacherUpdate(BaseModel):
     last_name: Optional[str] = None
     first_name: Optional[str] = None
     middle_name: Optional[str] = None
-    home_room_id: Optional[int] = None
-    is_head_of_department: Optional[bool] = None
-    department_id: Optional[int] = None
+    notes: Optional[str] = None
+    default_weekly_hour_limit: Optional[float] = None
+    default_daily_lessons_limit: Optional[int] = None
 
 class TeacherResponse(TeacherBase):
     id: int
